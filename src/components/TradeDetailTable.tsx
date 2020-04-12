@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -10,7 +10,9 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import * as dollarFormatter from '../utils/dollar'
+import * as dateFormatter from '../utils/date'
 import { Trade } from '../trade.model'
+import { Chip } from '@material-ui/core'
 
 const useStyles = makeStyles({
   table: {
@@ -22,12 +24,11 @@ const useStyles = makeStyles({
 })
 
 function TradeDetailTable() {
-  const classes = useStyles()
-
   const { id } = useParams()
-
   const tradesRef = useFirestore().collection('trades').doc(id)
   const trade: Trade = useFirestoreDocData(tradesRef, { idField: 'id' })
+
+  const classes = useStyles()
 
   return (
     <div>
@@ -37,6 +38,7 @@ function TradeDetailTable() {
           <TableHead>
             <TableRow>
               <TableCell>Pair</TableCell>
+              <TableCell>Long / Short</TableCell>
               <TableCell>Quantity</TableCell>
               <TableCell>Entry Date</TableCell>
               <TableCell>Exit Date</TableCell>
@@ -47,16 +49,19 @@ function TradeDetailTable() {
           <TableBody>
             <TableRow>
               <TableCell component="th" scope="row">
-                <Link to={`/trades/${trade.id}`}> {trade.pair}</Link>
+                {trade.pair}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <Chip label={trade.action === 'buy' ? 'Long' : 'Short'} />
               </TableCell>
               <TableCell component="th" scope="row">
                 {trade.quantity}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.entryDate}
+                {dateFormatter.toUserFriendlyFullDate(trade.entryDate)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.exitDate}
+                {dateFormatter.toUserFriendlyFullDate(trade.exitDate)}
               </TableCell>
               <TableCell component="th" scope="row">
                 {dollarFormatter.format(trade.entryPrice)}
@@ -68,6 +73,12 @@ function TradeDetailTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      {trade.imageUrl && (
+        <>
+          <h2>Attachments</h2>
+          <img style={{ maxHeight: '70vh' }} src={trade.imageUrl} />
+        </>
+      )}
     </div>
   )
 }

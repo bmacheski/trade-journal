@@ -14,6 +14,7 @@ export class Trade implements Deserializable {
   exitDate: Moment | string
   action: 'buy' | 'sell' | null
   notes: string
+  imageUrl: string
 
   constructor(trade: any = {}) {
     this.id = trade.id || null
@@ -25,6 +26,7 @@ export class Trade implements Deserializable {
     this.exitDate = trade.exitDate || ''
     this.action = trade.action || ''
     this.notes = trade.notes || ''
+    this.imageUrl = trade.imageUrl || ''
   }
 
   deserialize(input: any) {

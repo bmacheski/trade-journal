@@ -1,6 +1,5 @@
 import React from 'react'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import moment from 'moment'
 import { Trade } from '../trade.model'
 import {
   TextField,
@@ -14,24 +13,19 @@ import {
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
-
-const formatDate = (date: string) => {
-  const d = date || new Date()
-  return moment(d).format('YYYY-MM-DD[T]HH:mm:ss')
-}
+import * as dateFormatter from '../utils/date'
 
 function parseDateFields(values) {
   const { entryDate, exitDate } = values
 
   return Object.assign(values, {
-    entryDate: entryDate ? formatDate(entryDate) : null,
-    exitDate: exitDate ? formatDate(exitDate) : null,
+    entryDate: entryDate ? dateFormatter.toDateTime(entryDate) : null,
+    exitDate: exitDate ? dateFormatter.toDateTime(exitDate) : null,
   })
 }
 
 function TradeForm() {
   const { id = 'new' } = useParams()
-
   const isNewTrade = id === 'new'
 
   const tradesRef = useFirestore().collection('trades')
@@ -70,6 +64,7 @@ function TradeForm() {
     return <Redirect to={redirect} />
   }
 
+  console.log('TRADE', trade)
   return (
     <div>
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
@@ -155,8 +150,7 @@ function TradeForm() {
               onChange={onFormFieldChange}
             />
           </Grid>
-
-          <Grid item md={6} xs={12}>
+          <Grid item md={2} xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Buy / Sell</FormLabel>
               <RadioGroup
@@ -165,14 +159,31 @@ function TradeForm() {
                 value={formTrade?.action}
                 onChange={onFormFieldChange}
               >
-                <FormControlLabel value="buy" control={<Radio />} label="Buy" />
                 <FormControlLabel
-                  value="sell"
-                  control={<Radio />}
+                  control={
+                    <Radio value="buy" checked={formTrade?.action == 'buy'} />
+                  }
+                  label="Buy"
+                />
+                <FormControlLabel
+                  control={
+                    <Radio value="sell" checked={formTrade?.action == 'sell'} />
+                  }
                   label="Sell"
                 />
               </RadioGroup>
             </FormControl>
+          </Grid>
+          <Grid item md={10} xs={12}>
+            <TextField
+              fullWidth
+              label="Image URL"
+              margin="dense"
+              name="imageUrl"
+              value={formTrade?.imageUrl}
+              variant="outlined"
+              onChange={onFormFieldChange}
+            />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField

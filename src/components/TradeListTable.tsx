@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper'
 import { Create, Delete } from '@material-ui/icons'
 import Chip from '@material-ui/core/Chip'
 import * as dollarFormatter from '../utils/dollar'
-import moment from 'moment'
+import * as dateFormatter from '../utils/date'
 
 const useStyles = makeStyles({
   table: {
@@ -21,10 +21,10 @@ const useStyles = makeStyles({
 })
 
 function TradeListTable() {
-  const classes = useStyles()
-
   const tradesRef = useFirestore().collection('trades')
   const trades = useFirestoreCollectionData(tradesRef, { idField: 'id' })
+
+  const classes = useStyles()
 
   async function onDeleteClick(id: string) {
     await tradesRef.doc(id).delete()
@@ -58,10 +58,10 @@ function TradeListTable() {
                 {trade.quantity}
               </TableCell>
               <TableCell component="th" scope="row">
-                {moment(trade.entryDate).format('LLL')}
+                {dateFormatter.toUserFriendlyFullDate(trade.entryDate)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {moment(trade.exitDate).format('LLL')}
+                {dateFormatter.toUserFriendlyFullDate(trade.exitDate)}
               </TableCell>
               <TableCell component="th" scope="row">
                 {dollarFormatter.format(trade.entryPrice)}
