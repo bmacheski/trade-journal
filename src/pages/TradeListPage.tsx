@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { Button } from '@material-ui/core'
-import TradeTable from '../components/TradeTable'
+import TradeListTable from '../components/TradeListTable'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import { SuspenseWithPerf } from 'reactfire'
@@ -10,15 +10,15 @@ function TradeListPage() {
   return (
     <Layout>
       <SuspenseWithPerf
-        fallback={'loading trades..'}
-        traceId={'load-trades-status'}
+        fallback="Loading trades.."
+        traceId="load-trades-status"
       >
-        <Link to={ROUTES.tradeCreate}>
+        <Link to={ROUTES.TREADE_CREATE}>
           <Button variant="contained" color="primary">
             Add Trade
           </Button>
         </Link>
-        <TradeTable />
+        <TradeListTable />
       </SuspenseWithPerf>
     </Layout>
   )

@@ -12,7 +12,7 @@ export class Trade implements Deserializable {
   entryPrice: number
   entryDate: Moment | string
   exitDate: Moment | string
-  buy: boolean
+  action: 'buy' | 'sell' | null
   notes: string
 
   constructor(trade: any = {}) {
@@ -23,7 +23,7 @@ export class Trade implements Deserializable {
     this.exitPrice = trade.exitPrice || ''
     this.entryDate = trade.entryDate || ''
     this.exitDate = trade.exitDate || ''
-    this.buy = trade.buy || null
+    this.action = trade.action || ''
     this.notes = trade.notes || ''
   }
 

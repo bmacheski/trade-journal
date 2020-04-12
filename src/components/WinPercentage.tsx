@@ -2,8 +2,13 @@ import React from 'react'
 import { Card, CardContent } from '@material-ui/core'
 import ReactApexChart from 'react-apexcharts'
 
-function WinPercentage({ metrics }) {
-  const [options, setOptions] = React.useState({
+interface WinPercentageProps {
+  metrics: any
+}
+
+function WinPercentage({ metrics }: WinPercentageProps) {
+  const [config, setConfig] = React.useState({
+    labels: ['Wins'],
     series: [],
     options: {
       chart: {
@@ -17,7 +22,6 @@ function WinPercentage({ metrics }) {
           },
         },
       },
-      labels: ['Wins'],
     },
   })
 
@@ -30,7 +34,7 @@ function WinPercentage({ metrics }) {
             : 0,
         ],
       }
-      setOptions(Object.assign({}, metrics, data))
+      setConfig(Object.assign({}, metrics, data))
     }
   }, [metrics])
 
@@ -38,10 +42,9 @@ function WinPercentage({ metrics }) {
     <Card>
       <CardContent>
         <ReactApexChart
-          options={options}
-          series={options.series}
+          options={config}
+          series={config.series}
           type="radialBar"
-          height={350}
         />
       </CardContent>
     </Card>

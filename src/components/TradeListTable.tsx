@@ -10,25 +10,17 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import { Create, Delete } from '@material-ui/icons'
+import Chip from '@material-ui/core/Chip'
+import * as dollarFormatter from '../utils/dollar'
+import moment from 'moment'
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: 'white',
-    border: '2px solid #000',
-    boxShadow: `0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)`,
-    padding: `16px 32px 24px`,
-  },
 })
 
-function TradeTable() {
+function TradeListTable() {
   const classes = useStyles()
 
   const tradesRef = useFirestore().collection('trades')
@@ -44,6 +36,7 @@ function TradeTable() {
         <TableHead>
           <TableRow>
             <TableCell>Pair</TableCell>
+            <TableCell>Long / Short</TableCell>
             <TableCell>Quantity</TableCell>
             <TableCell>Entry Date</TableCell>
             <TableCell>Exit Date</TableCell>
@@ -59,19 +52,22 @@ function TradeTable() {
                 <Link to={`/trades/${trade.id}`}> {trade.pair}</Link>
               </TableCell>
               <TableCell component="th" scope="row">
+                <Chip label={trade.action === 'buy' ? 'Long' : 'Short'} />
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {trade.quantity}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.entryDate}
+                {moment(trade.entryDate).format('LLL')}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.exitDate}
+                {moment(trade.exitDate).format('LLL')}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.entryPrice}
+                {dollarFormatter.format(trade.entryPrice)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {trade.exitPrice}
+                {dollarFormatter.format(trade.exitPrice)}
               </TableCell>
               <TableCell component="th" scope="row">
                 <Link to={`/trades/${trade.id}/edit`}>
@@ -87,4 +83,4 @@ function TradeTable() {
   )
 }
 
-export default TradeTable
+export default TradeListTable

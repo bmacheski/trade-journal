@@ -6,8 +6,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/Inbox'
-import DraftsIcon from '@material-ui/icons/Drafts'
+import { ShowChart } from '@material-ui/icons'
+import { Dashboard } from '@material-ui/icons'
 import { Link as RouterLink } from 'react-router-dom'
 import Link from '@material-ui/core/Link'
 import { ROUTES } from '../Router'
@@ -50,18 +50,18 @@ function Sidebar(props) {
     >
       <div {...rest} className={clsx(classes.root, className)}>
         <List component="nav" aria-label="main mailbox folders">
-          <Link component={RouterLink} to={ROUTES.dashboard}>
+          <Link component={RouterLink} to={ROUTES.DASHBOARD}>
             <ListItem button>
               <ListItemIcon>
-                <InboxIcon />
+                <Dashboard />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
           </Link>
-          <Link component={RouterLink} to={ROUTES.tradesList}>
+          <Link component={RouterLink} to={ROUTES.TRADE_LIST}>
             <ListItem button>
               <ListItemIcon>
-                <DraftsIcon />
+                <ShowChart />
               </ListItemIcon>
               <ListItemText primary="Trades" />
             </ListItem>

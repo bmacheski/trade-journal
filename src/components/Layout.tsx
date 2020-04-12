@@ -7,13 +7,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Sidebar from './Sidebar'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 56,
-    height: '100%',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64,
-    },
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
