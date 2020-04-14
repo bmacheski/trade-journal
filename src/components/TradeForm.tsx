@@ -49,14 +49,17 @@ function TradeForm() {
   const [redirect, setRedirect] = React.useState<string>('')
 
   async function onSubmit() {
+    if (updating || creating) return
     const formData = parseDateFields(formTrade)
     if (isNewTrade) {
       await createTrade({
         variables: { trade: formData },
+        refetchQueries: [{ query: GET_TRADES }],
       })
     } else {
       await updateTrade({
         variables: { id, changes: formData },
+        refetchQueries: [{ query: GET_TRADES }],
       })
     }
     setRedirect(ROUTES.TRADE_LIST)
@@ -170,13 +173,16 @@ function TradeForm() {
               >
                 <FormControlLabel
                   control={
-                    <Radio value="buy" checked={formTrade?.action == 'buy'} />
+                    <Radio value="buy" checked={formTrade?.action === 'buy'} />
                   }
                   label="Buy"
                 />
                 <FormControlLabel
                   control={
-                    <Radio value="sell" checked={formTrade?.action == 'sell'} />
+                    <Radio
+                      value="sell"
+                      checked={formTrade?.action === 'sell'}
+                    />
                   }
                   label="Sell"
                 />

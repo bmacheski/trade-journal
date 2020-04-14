@@ -13,9 +13,12 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
-  content: {
+  contentWrapper: {
     height: '100%',
     paddingLeft: 240,
+  },
+  content: {
+    padding: '32px',
   },
 }))
 
@@ -38,8 +41,8 @@ function LayoutWrapper(props: { children: JSX.Element }) {
         </Toolbar>
       </AppBar>
       <Sidebar />
-      <main className={classes.content}>
-        <div style={{ padding: '32px' }}>{props.children}</div>
+      <main className={classes.contentWrapper}>
+        <div className={classes.content}>{props.children}</div>
       </main>
     </div>
   )
