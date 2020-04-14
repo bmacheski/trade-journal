@@ -21,6 +21,7 @@ import {
 } from '../graphql/queries/trades.query'
 
 function parseDateFields(values) {
+  console.log('vals in parse', values)
   const { entry_date, exit_date } = values
   // temp removal for hasura updates
   delete values['__typename']
@@ -33,16 +34,14 @@ function parseDateFields(values) {
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
-
-  const { data = {} }: any = useQuery(GET_TRADES, {
+  const { data: { trades = [] } = {} }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
+  const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
+  const [redirect, setRedirect] = React.useState<string>('')
 
   const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
   const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
-
-  const { trades = [] } = data
-  const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
 
   React.useEffect(() => {
     if (trades && trades.length) {
@@ -50,11 +49,10 @@ function TradeForm() {
     }
   }, [trades.length])
 
-  const [redirect, setRedirect] = React.useState<string>('')
-
   async function onSubmit() {
     if (updating || creating) return
     const formData = parseDateFields(formTrade)
+    console.log('formData', formData)
     if (isNewTrade) {
       await createTrade({
         variables: { trade: formData },
@@ -211,6 +209,8 @@ function TradeForm() {
               name="notes"
               multiline
               rowsMax={4}
+              value={formTrade?.notes}
+              onChange={onFormFieldChange}
               fullWidth
               variant="outlined"
             />

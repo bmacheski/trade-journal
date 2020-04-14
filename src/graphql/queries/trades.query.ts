@@ -16,6 +16,7 @@ const GET_TRADES = gql`
       exit_price
       pair
       quantity
+      notes
     }
     trades_aggregate {
       aggregate {

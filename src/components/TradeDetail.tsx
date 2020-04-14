@@ -3,8 +3,16 @@ import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
+import { Card, CardContent, CardHeader, makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles({
+  card: {
+    marginTop: 10,
+  },
+})
 
 function TradeDetail() {
+  const styles = useStyles()
   const { id } = useParams()
   const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES, {
     variables: { id },
@@ -15,13 +23,23 @@ function TradeDetail() {
   return trades.map((trade) => {
     return (
       <div>
-        <h1>Trade Detail</h1>
-        <TradeTable trades={trades} showPagination={false} />
+        <Card className={styles.card}>
+          <CardHeader title="Trade Details"></CardHeader>
+          <TradeTable trades={trades} showPagination={false} />
+        </Card>
         {trade.image_url && (
-          <>
-            <h2>Attachments</h2>
+          <Card className={styles.card}>
+            <CardHeader title="Screenshot"></CardHeader>
             <img style={{ maxHeight: '70vh' }} src={trade.image_url} />
-          </>
+          </Card>
+        )}
+        {trade.notes && (
+          <Card className={styles.card}>
+            <CardHeader title="Notes"></CardHeader>
+            <Card>
+              <CardContent>{trade.notes}</CardContent>
+            </Card>
+          </Card>
         )}
       </div>
     )
