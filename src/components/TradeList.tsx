@@ -5,7 +5,7 @@ import TradeTable from './TradeTable'
 import { Create, Delete } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
 
-function TradeListTable() {
+function TradeList() {
   const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES)
   const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
 
@@ -61,4 +61,4 @@ function TradeListTable() {
   return <TradeTable trades={trades} data={data} />
 }
 
-export default TradeListTable
+export default TradeList

@@ -117,7 +117,7 @@ function TradeForm() {
               margin="dense"
               variant="outlined"
               name="entry_date"
-              value={formTrade?.entryDate}
+              value={formTrade?.entry_date}
               onChange={onFormFieldChange}
               InputLabelProps={{
                 shrink: true,
@@ -133,7 +133,7 @@ function TradeForm() {
               name="exit_date"
               variant="outlined"
               onChange={onFormFieldChange}
-              value={formTrade?.exitDate}
+              value={formTrade?.exit_date}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -146,7 +146,7 @@ function TradeForm() {
               label="Entry Price"
               margin="dense"
               name="entry_price"
-              value={formTrade?.entryPrice}
+              value={formTrade?.entry_price}
               variant="outlined"
               onChange={onFormFieldChange}
             />
@@ -157,7 +157,7 @@ function TradeForm() {
               label="Exit Price"
               margin="dense"
               name="exit_price"
-              value={formTrade?.exitPrice}
+              value={formTrade?.exit_price}
               variant="outlined"
               onChange={onFormFieldChange}
             />
@@ -195,7 +195,7 @@ function TradeForm() {
               label="Image URL"
               margin="dense"
               name="image_url"
-              value={formTrade?.imageUrl}
+              value={formTrade?.image_url}
               variant="outlined"
               onChange={onFormFieldChange}
             />

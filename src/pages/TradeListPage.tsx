@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { Button } from '@material-ui/core'
-import TradeListTable from '../components/TradeListTable'
+import TradeList from '../components/TradeList'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../Router'
 
@@ -14,7 +14,7 @@ function TradeListPage() {
             Add Trade
           </Button>
         </Link>
-        <TradeListTable />
+        <TradeList />
       </>
     </Layout>
   )

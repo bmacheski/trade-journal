@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { GET_TRADES } from '../queries'
 import TradeTable from './TradeTable'
 
-function TradeDetailTable() {
+function TradeDetail() {
   const { id } = useParams()
   const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES, {
     variables: { id },
@@ -28,4 +28,4 @@ function TradeDetailTable() {
   })
 }
 
-export default TradeDetailTable
+export default TradeDetail

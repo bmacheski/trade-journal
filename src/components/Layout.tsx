@@ -22,7 +22,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function LayoutWrapper(props: { children: JSX.Element }) {
+interface LayoutWrapperProps {
+  children: JSX.Element
+}
+
+function LayoutWrapper({ children }: LayoutWrapperProps) {
   const classes = useStyles()
 
   return (
@@ -42,7 +46,7 @@ function LayoutWrapper(props: { children: JSX.Element }) {
       </AppBar>
       <Sidebar />
       <main className={classes.contentWrapper}>
-        <div className={classes.content}>{props.children}</div>
+        <div className={classes.content}>{children}</div>
       </main>
     </div>
   )

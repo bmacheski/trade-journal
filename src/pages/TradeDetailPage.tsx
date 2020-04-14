@@ -1,11 +1,11 @@
 import React from 'react'
 import Layout from '../components/Layout'
-import TradeDetailTable from '../components/TradeDetailTable'
+import TradeDetail from '../components/TradeDetail'
 
 function TradeDetailPage() {
   return (
     <Layout>
-      <TradeDetailTable />
+      <TradeDetail />
     </Layout>
   )
 }
