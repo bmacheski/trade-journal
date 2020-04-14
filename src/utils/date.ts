@@ -1,6 +1,7 @@
 import moment, { Moment } from 'moment'
 
 export function toUserFriendlyFullDate(date) {
+  if (!date) return ''
   return moment(date).format('LLL')
 }
 

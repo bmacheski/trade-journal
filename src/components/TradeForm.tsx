@@ -1,5 +1,4 @@
 import React from 'react'
-import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { Trade } from '../trade.model'
 import {
   TextField,
@@ -14,13 +13,16 @@ import {
 import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import * as dateFormatter from '../utils/date'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GET_TRADES, UPDATE_TRADE, CREATE_TRADE } from '../queries'
 
 function parseDateFields(values) {
-  const { entryDate, exitDate } = values
-
+  const { entry_date, exit_date } = values
+  // temp removal for hasura updates
+  delete values['__typename']
   return Object.assign(values, {
-    entryDate: entryDate ? dateFormatter.toDateTime(entryDate) : null,
-    exitDate: exitDate ? dateFormatter.toDateTime(exitDate) : null,
+    entry_date: entry_date ? dateFormatter.toDateTime(entry_date) : null,
+    exit_date: exit_date ? dateFormatter.toDateTime(exit_date) : null,
   })
 }
 
@@ -28,27 +30,35 @@ function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
 
-  const tradesRef = useFirestore().collection('trades')
-  const trade: Trade = useFirestoreDocData(tradesRef.doc(id), {
-    idField: 'id',
+  const { data = {} }: any = useQuery(GET_TRADES, {
+    variables: { id },
   })
 
+  const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
+  const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
+
+  const { trades = [] } = data
   const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
 
   React.useEffect(() => {
-    if (trade) {
-      setFormTrade(parseDateFields(trade))
+    if (trades && trades.length) {
+      setFormTrade(parseDateFields(trades[0]))
     }
-  }, [trade])
+  }, [trades.length])
 
   const [redirect, setRedirect] = React.useState<string>('')
 
   async function onSubmit() {
     const formData = parseDateFields(formTrade)
-    !isNewTrade
-      ? await tradesRef.doc(formData.id).update(formData)
-      : await tradesRef.add(formData)
-
+    if (isNewTrade) {
+      await createTrade({
+        variables: { trade: formData },
+      })
+    } else {
+      await updateTrade({
+        variables: { id, changes: formData },
+      })
+    }
     setRedirect(ROUTES.TRADE_LIST)
   }
 
@@ -64,7 +74,6 @@ function TradeForm() {
     return <Redirect to={redirect} />
   }
 
-  console.log('TRADE', trade)
   return (
     <div>
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
@@ -104,7 +113,7 @@ function TradeForm() {
               type="datetime-local"
               margin="dense"
               variant="outlined"
-              name="entryDate"
+              name="entry_date"
               value={formTrade?.entryDate}
               onChange={onFormFieldChange}
               InputLabelProps={{
@@ -118,7 +127,7 @@ function TradeForm() {
               label="Exit Date"
               margin="dense"
               type="datetime-local"
-              name="exitDate"
+              name="exit_date"
               variant="outlined"
               onChange={onFormFieldChange}
               value={formTrade?.exitDate}
@@ -133,7 +142,7 @@ function TradeForm() {
               fullWidth
               label="Entry Price"
               margin="dense"
-              name="entryPrice"
+              name="entry_price"
               value={formTrade?.entryPrice}
               variant="outlined"
               onChange={onFormFieldChange}
@@ -144,7 +153,7 @@ function TradeForm() {
               fullWidth
               label="Exit Price"
               margin="dense"
-              name="exitPrice"
+              name="exit_price"
               value={formTrade?.exitPrice}
               variant="outlined"
               onChange={onFormFieldChange}
@@ -179,7 +188,7 @@ function TradeForm() {
               fullWidth
               label="Image URL"
               margin="dense"
-              name="imageUrl"
+              name="image_url"
               value={formTrade?.imageUrl}
               variant="outlined"
               onChange={onFormFieldChange}
@@ -189,6 +198,7 @@ function TradeForm() {
             <TextField
               id="outlined-multiline-flexible"
               label="Notes"
+              name="notes"
               multiline
               rowsMax={4}
               fullWidth

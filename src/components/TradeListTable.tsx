@@ -1,5 +1,4 @@
 import React from 'react'
-import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
@@ -13,6 +12,8 @@ import { Create, Delete } from '@material-ui/icons'
 import Chip from '@material-ui/core/Chip'
 import * as dollarFormatter from '../utils/dollar'
 import * as dateFormatter from '../utils/date'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import { REMOVE_TRADE, GET_TRADES } from '../queries'
 
 const useStyles = makeStyles({
   table: {
@@ -21,13 +22,32 @@ const useStyles = makeStyles({
 })
 
 function TradeListTable() {
-  const tradesRef = useFirestore().collection('trades')
-  const trades = useFirestoreCollectionData(tradesRef, { idField: 'id' })
+  const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES)
+  const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
 
   const classes = useStyles()
 
-  async function onDeleteClick(id: string) {
-    await tradesRef.doc(id).delete()
+  function updateCache(client, item) {
+    const data = client.readQuery({
+      query: GET_TRADES,
+    })
+    const newData = {
+      trades: data.trades.filter(
+        (t) => t.id !== item.data.delete_trades.returning[0].id,
+      ),
+    }
+    client.writeQuery({
+      query: GET_TRADES,
+      data: newData,
+    })
+  }
+
+  function onDeleteClick(id: string) {
+    if (deleting) return
+    deleteTrade({
+      variables: { id },
+      update: updateCache,
+    })
   }
 
   return (
@@ -58,16 +78,16 @@ function TradeListTable() {
                 {trade.quantity}
               </TableCell>
               <TableCell component="th" scope="row">
-                {dateFormatter.toUserFriendlyFullDate(trade.entryDate)}
+                {dateFormatter.toUserFriendlyFullDate(trade.entry_date)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {dateFormatter.toUserFriendlyFullDate(trade.exitDate)}
+                {dateFormatter.toUserFriendlyFullDate(trade.exit_date)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {dollarFormatter.format(trade.entryPrice)}
+                {dollarFormatter.format(trade.entry_price)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {dollarFormatter.format(trade.exitPrice)}
+                {dollarFormatter.format(trade.exit_price)}
               </TableCell>
               <TableCell component="th" scope="row">
                 <Link to={`/trades/${trade.id}/edit`}>

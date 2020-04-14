@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import { FirebaseAppProvider } from 'reactfire'
-import firebaseConfig from './config/db'
+import { ApolloProvider } from '@apollo/react-hooks'
+import client from './apollo-client'
 
 ReactDOM.render(
   <React.StrictMode>
-    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+    <ApolloProvider client={client}>
       <App />
-    </FirebaseAppProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 )

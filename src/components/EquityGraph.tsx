@@ -6,7 +6,7 @@ function EquityGraph() {
   const options = {
     series: [
       {
-        name: 'Desktops',
+        name: 'Holdings',
         data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
       },
     ],
@@ -25,7 +25,7 @@ function EquityGraph() {
         curve: 'straight',
       },
       title: {
-        text: 'Product Trends by Month',
+        text: 'Equity Graph',
         align: 'left',
       },
       grid: {
@@ -45,6 +45,9 @@ function EquityGraph() {
           'Jul',
           'Aug',
           'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
         ],
       },
     },

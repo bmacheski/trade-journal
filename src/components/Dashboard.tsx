@@ -1,12 +1,19 @@
 import React from 'react'
 import { Card, CardContent, Grid } from '@material-ui/core'
-import { useFirestore, useFirestoreDocData } from 'reactfire'
 import WinPercentage from '../components/WinPercentage'
 import EquityGraph from '../components/EquityGraph'
 
 function Dashboard() {
-  const tradesRef = useFirestore().collection('metrics').doc('totals')
-  const metrics: any = useFirestoreDocData(tradesRef)
+  // TODO: replace with actual data
+  const TEMP_METRICS = {
+    return: 1000,
+    count: 20,
+    shorts: 10,
+    longs: 10,
+    wins: 12,
+    losses: 8,
+  }
+  const metrics = TEMP_METRICS
 
   return (
     <Grid container spacing={4}>
