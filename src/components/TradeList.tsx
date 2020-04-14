@@ -1,12 +1,15 @@
 import React from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { REMOVE_TRADE, GET_TRADES } from '../queries'
+import { REMOVE_TRADE, GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
 import { Create, Delete } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
 
 function TradeList() {
-  const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES)
+  const {
+    data: { trades, trades_aggregate } = { trades: [], trades_aggregate: {} },
+    refetch,
+  }: any = useQuery(GET_TRADES)
   const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
 
   function updateCache(client, item) {
@@ -43,6 +46,7 @@ function TradeList() {
     },
     {
       header: 'Actions',
+      headerDisabled: true,
       key: 'actions',
       order: 8,
       render: (trade) => {
@@ -58,7 +62,14 @@ function TradeList() {
     },
   ]
 
-  return <TradeTable trades={trades} data={data} />
+  return (
+    <TradeTable
+      trades={trades}
+      data={data}
+      totalCount={trades_aggregate?.aggregate?.count}
+      onRefresh={refetch}
+    />
+  )
 }
 
 export default TradeList

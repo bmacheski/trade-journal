@@ -14,7 +14,11 @@ import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import * as dateFormatter from '../utils/date'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { GET_TRADES, UPDATE_TRADE, CREATE_TRADE } from '../queries'
+import {
+  GET_TRADES,
+  UPDATE_TRADE,
+  CREATE_TRADE,
+} from '../graphql/queries/trades.query'
 
 function parseDateFields(values) {
   const { entry_date, exit_date } = values

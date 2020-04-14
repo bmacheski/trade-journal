@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
-import { GET_TRADES } from '../queries'
+import { GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
 
 function TradeDetail() {
@@ -16,7 +16,7 @@ function TradeDetail() {
     return (
       <div>
         <h1>Trade Detail</h1>
-        <TradeTable trades={trades} />
+        <TradeTable trades={trades} showPagination={false} />
         {trade.image_url && (
           <>
             <h2>Attachments</h2>
