@@ -165,7 +165,7 @@ function TradeTable({
           </TableHead>
           <TableBody>
             {trades.map((trade) => (
-              <TableRow>
+              <TableRow key={trade.id}>
                 {mergedData.map((val) => (
                   <TableCell component="th" scope="row">
                     {val.render ? val.render(trade) : trade[val.key]}

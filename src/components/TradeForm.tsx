@@ -21,7 +21,6 @@ import {
 } from '../graphql/queries/trades.query'
 
 function parseDateFields(values) {
-  console.log('vals in parse', values)
   const { entry_date, exit_date } = values
   // temp removal for hasura updates
   delete values['__typename']
@@ -52,7 +51,6 @@ function TradeForm() {
   async function onSubmit() {
     if (updating || creating) return
     const formData = parseDateFields(formTrade)
-    console.log('formData', formData)
     if (isNewTrade) {
       await createTrade({
         variables: { trade: formData },

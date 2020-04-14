@@ -9,6 +9,9 @@ const useStyles = makeStyles({
   card: {
     marginTop: 10,
   },
+  screenshot: {
+    maxHeight: '70vh',
+  },
 })
 
 function TradeDetail() {
@@ -30,7 +33,7 @@ function TradeDetail() {
         {trade.image_url && (
           <Card className={styles.card}>
             <CardHeader title="Screenshot"></CardHeader>
-            <img style={{ maxHeight: '70vh' }} src={trade.image_url} />
+            <img className={styles.screenshot} src={trade.image_url} />
           </Card>
         )}
         {trade.notes && (
