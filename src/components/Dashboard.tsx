@@ -2,18 +2,23 @@ import React from 'react'
 import { Card, CardContent, Grid } from '@material-ui/core'
 import WinPercentage from '../components/WinPercentage'
 import EquityGraph from '../components/EquityGraph'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_METRICS } from '../graphql/queries/trades.query'
 
 function Dashboard() {
-  // TODO: replace with actual data
-  const TEMP_METRICS = {
-    return: 1000,
-    count: 20,
-    shorts: 10,
-    longs: 10,
-    wins: 12,
-    losses: 8,
-  }
-  const metrics = TEMP_METRICS
+  const {
+    data: { trade_metrics } = { trade_metrics: [] },
+    refetch,
+    loading,
+  }: any = useQuery(GET_METRICS)
+  const metrics = trade_metrics[0] || {}
+
+  React.useEffect(() => {
+    // TODO: this may not be needed
+    if (!loading) {
+      refetch()
+    }
+  }, [])
 
   return (
     <Grid container spacing={4}>
@@ -24,12 +29,12 @@ function Dashboard() {
       </Grid>
       <Grid item lg={3} sm={6} xl={3} xs={12}>
         <Card>
-          <CardContent>Total Trades: {metrics.count || 0}</CardContent>
+          <CardContent>Total Trades: {metrics.total_trades || 0}</CardContent>
         </Card>
       </Grid>
       <Grid item lg={3} sm={6} xl={3} xs={12}>
         <Card>
-          <CardContent>Longs: {metrics.shorts}</CardContent>
+          <CardContent>Longs: {metrics.longs}</CardContent>
         </Card>
       </Grid>
       <Grid item lg={3} sm={6} xl={3} xs={12}>
@@ -42,7 +47,10 @@ function Dashboard() {
       </Grid>
       <Grid item lg={4} md={6} xl={3} xs={12}>
         <Card>
-          <WinPercentage metrics={metrics} />
+          <WinPercentage
+            winCount={metrics.wins}
+            totalCount={metrics.total_trades}
+          />
         </Card>
       </Grid>
     </Grid>

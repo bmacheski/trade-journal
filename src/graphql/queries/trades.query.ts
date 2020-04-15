@@ -57,4 +57,16 @@ const REMOVE_TRADE = gql`
   }
 `
 
-export { GET_TRADES, UPDATE_TRADE, CREATE_TRADE, REMOVE_TRADE }
+const GET_METRICS = gql`
+  query {
+    trade_metrics {
+      longs
+      shorts
+      return
+      total_trades
+      wins
+    }
+  }
+`
+
+export { GET_TRADES, UPDATE_TRADE, CREATE_TRADE, REMOVE_TRADE, GET_METRICS }

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 })
 
 function TradeDetail() {
-  const styles = useStyles()
+  const classes = useStyles()
   const { id } = useParams()
   const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES, {
     variables: { id },
@@ -34,7 +34,7 @@ function TradeDetail() {
   return trades.map((trade) => {
     return (
       <div>
-        <Card className={styles.card}>
+        <Card className={classes.card}>
           <CardHeader title="Trade Details"></CardHeader>
           <TradeTable
             trades={trades}
@@ -43,13 +43,13 @@ function TradeDetail() {
           />
         </Card>
         {trade.image_url && (
-          <Card className={styles.card}>
+          <Card className={classes.card}>
             <CardHeader title="Screenshot"></CardHeader>
-            <img className={styles.screenshot} src={trade.image_url} />
+            <img className={classes.screenshot} src={trade.image_url} />
           </Card>
         )}
         {trade.notes && (
-          <Card className={styles.card}>
+          <Card className={classes.card}>
             <CardHeader title="Notes"></CardHeader>
             <Card>
               <CardContent>{trade.notes}</CardContent>

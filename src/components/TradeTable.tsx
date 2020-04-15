@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper'
 import * as dollarFormatter from '../utils/dollar'
 import * as dateFormatter from '../utils/date'
 import { Chip, TablePagination, IconButton } from '@material-ui/core'
-import { Create, Delete } from '@material-ui/icons'
+import { Create, Delete, ArrowDropDown, ArrowDropUp } from '@material-ui/icons'
 import usePrevious from '../hooks/usePrevious'
 import noop from 'lodash/noop'
 import { createStyles, lighten, Theme } from '@material-ui/core/styles'
@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => {
     clickable: {
       cursor: 'pointer',
     },
+    sortArrow: {
+      verticalAlign: 'middle',
+    },
   })
 })
 
@@ -60,9 +63,7 @@ function TradeTable({
   onDeleteSuccess = noop,
 }: TradeTableProps) {
   const classes = useStyles()
-
   const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
-
   const [sort, setSort] = React.useState<{
     direction: 'asc' | 'desc'
     column: string
@@ -74,54 +75,7 @@ function TradeTable({
     page: 0,
     skip: 0,
   })
-
-  async function onDeleteClick(
-    evt: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    id: string,
-  ) {
-    evt.stopPropagation()
-    if (deleting) return
-    await deleteTrade({
-      variables: { id },
-      refetchQueries: [{ query: GET_TRADES }],
-    })
-    onDeleteSuccess()
-  }
-
-  function onSortClick(column) {
-    setSort((prev) => {
-      return {
-        direction:
-          prev.column == column && prev?.direction == 'asc' ? 'desc' : 'asc',
-        column,
-        page: 0,
-        skip: prev.skip,
-      }
-    })
-  }
-
-  function onPageChange(_, page) {
-    setSort((prev) => {
-      return {
-        direction: prev.direction,
-        column: prev.column,
-        page,
-        skip: page * 10,
-      }
-    })
-  }
-
-  const previousSortState = usePrevious(sort)
-  React.useEffect(() => {
-    if (previousSortState && sort && onRefresh) {
-      onRefresh({
-        skip: sort.skip,
-        order: {
-          [sort.column]: sort.direction,
-        },
-      })
-    }
-  }, [sort, onRefresh])
+  const previousSort = usePrevious(sort)
 
   const tableConfigData = [
     { header: 'Pair', key: 'pair', order: 1 },
@@ -180,6 +134,53 @@ function TradeTable({
     },
   ]
 
+  async function onDeleteClick(
+    evt: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    id: string,
+  ) {
+    evt.stopPropagation()
+    if (deleting) return
+    await deleteTrade({
+      variables: { id },
+      refetchQueries: [{ query: GET_TRADES }],
+    })
+    onDeleteSuccess()
+  }
+
+  function onSortClick(column) {
+    setSort((prev) => {
+      return {
+        direction:
+          prev.column == column && prev?.direction == 'asc' ? 'desc' : 'asc',
+        column,
+        page: 0,
+        skip: prev.skip,
+      }
+    })
+  }
+
+  function onPageChange(_, page) {
+    setSort((prev) => {
+      return {
+        direction: prev.direction,
+        column: prev.column,
+        page,
+        skip: page * 10,
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    if (previousSort && sort && onRefresh) {
+      onRefresh({
+        skip: sort.skip,
+        order: {
+          [sort.column]: sort.direction,
+        },
+      })
+    }
+  }, [sort, onRefresh])
+
   if (!trades) return null
 
   return (
@@ -197,17 +198,17 @@ function TradeTable({
                       if (col.headerDisabled) return
                       onSortClick(col.key)
                     }}
-                    style={{ cursor: 'pointer' }}
+                    className={classes.clickable}
                   >
-                    {/* {sort.column === col.key ? (
+                    {sort.column === col.key ? (
                       sort.direction === 'asc' ? (
-                        <ArrowDropDown style={{ verticalAlign: 'middle' }} />
+                        <ArrowDropDown className={classes.sortArrow} />
                       ) : (
-                        <ArrowDropUp style={{ verticalAlign: 'middle' }} />
+                        <ArrowDropUp className={classes.sortArrow} />
                       )
                     ) : (
                       <></>
-                    )} */}
+                    )}
                     {col.header}
                   </TableCell>
                 ))}

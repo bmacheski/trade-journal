@@ -3,10 +3,11 @@ import { Card, CardContent } from '@material-ui/core'
 import ReactApexChart from 'react-apexcharts'
 
 interface WinPercentageProps {
-  metrics: any
+  winCount: number
+  totalCount: number
 }
 
-function WinPercentage({ metrics }: WinPercentageProps) {
+function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
   const [config, setConfig] = React.useState({
     labels: ['Wins'],
     series: [],
@@ -26,17 +27,15 @@ function WinPercentage({ metrics }: WinPercentageProps) {
   })
 
   React.useEffect(() => {
-    if (metrics && metrics.count) {
+    if (winCount && totalCount) {
       const data = {
         series: [
-          metrics.count > 0
-            ? ((metrics.wins / metrics.count) * 100).toFixed(2)
-            : 0,
+          totalCount > 0 ? ((winCount / totalCount) * 100).toFixed(2) : 0,
         ],
       }
-      setConfig(Object.assign({}, metrics, data))
+      setConfig(Object.assign({}, config, data))
     }
-  }, [metrics])
+  }, [winCount, totalCount])
 
   return (
     <Card>

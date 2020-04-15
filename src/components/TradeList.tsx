@@ -9,7 +9,6 @@ function TradeList() {
     data: { trades, trades_aggregate } = { trades: [], trades_aggregate: {} },
     refetch,
   }: any = useQuery(GET_TRADES)
-
   const [redirect, setRedirect] = React.useState<string>('')
 
   function onRowClick(tradeId: string) {

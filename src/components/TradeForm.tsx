@@ -33,12 +33,11 @@ function parseDateFields(values) {
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
+  const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
+  const [redirect, setRedirect] = React.useState<string>('')
   const { data: { trades = [] } = {} }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
-  const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
-  const [redirect, setRedirect] = React.useState<string>('')
-
   const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
   const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
 
