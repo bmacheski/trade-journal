@@ -93,6 +93,9 @@ function TradeForm() {
               value={formTrade?.pair}
               variant="outlined"
               onChange={onFormFieldChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </Grid>
           <Grid item md={6} xs={12}>
@@ -104,9 +107,12 @@ function TradeForm() {
               type="number"
               required
               margin="dense"
-              value={formTrade?.quantity}
               variant="outlined"
+              value={formTrade?.quantity}
               onChange={onFormFieldChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </Grid>
           <Grid item md={6} xs={12} container justify="space-around">
@@ -115,8 +121,8 @@ function TradeForm() {
               label="Entry Date"
               type="datetime-local"
               margin="dense"
-              variant="outlined"
               name="entry_date"
+              variant="outlined"
               value={formTrade?.entry_date}
               onChange={onFormFieldChange}
               InputLabelProps={{
@@ -146,9 +152,12 @@ function TradeForm() {
               label="Entry Price"
               margin="dense"
               name="entry_price"
-              value={formTrade?.entry_price}
               variant="outlined"
+              value={formTrade?.entry_price}
               onChange={onFormFieldChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </Grid>
           <Grid item md={6} xs={12}>
@@ -157,9 +166,10 @@ function TradeForm() {
               label="Exit Price"
               margin="dense"
               name="exit_price"
-              value={formTrade?.exit_price}
               variant="outlined"
+              value={formTrade?.exit_price}
               onChange={onFormFieldChange}
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item md={2} xs={12}>
@@ -194,16 +204,18 @@ function TradeForm() {
               fullWidth
               label="Image URL"
               margin="dense"
+              variant="outlined"
               name="image_url"
               value={formTrade?.image_url}
-              variant="outlined"
               onChange={onFormFieldChange}
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField
               id="outlined-multiline-flexible"
               label="Notes"
+              InputLabelProps={{ shrink: true }}
               name="notes"
               multiline
               rowsMax={4}

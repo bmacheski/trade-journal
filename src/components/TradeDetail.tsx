@@ -1,9 +1,10 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
 import { Card, CardContent, CardHeader, makeStyles } from '@material-ui/core'
+import { ROUTES } from '../Router'
 
 const useStyles = makeStyles({
   card: {
@@ -20,6 +21,13 @@ function TradeDetail() {
   const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
+  const [redirect, setRedirect] = React.useState<string>('')
+
+  function onDeleteSucces() {
+    setRedirect(ROUTES.TRADE_LIST)
+  }
+
+  if (redirect) return <Redirect to={redirect} />
 
   if (!trades) return null
 
@@ -28,7 +36,11 @@ function TradeDetail() {
       <div>
         <Card className={styles.card}>
           <CardHeader title="Trade Details"></CardHeader>
-          <TradeTable trades={trades} showPagination={false} />
+          <TradeTable
+            trades={trades}
+            showPagination={false}
+            onDeleteSuccess={onDeleteSucces}
+          />
         </Card>
         {trade.image_url && (
           <Card className={styles.card}>
