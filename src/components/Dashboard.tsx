@@ -14,7 +14,7 @@ function Dashboard() {
   const metrics = trade_metrics[0] || {}
 
   React.useEffect(() => {
-    // TODO: this may not be needed
+    // TODO: look into if this is needed
     if (!loading) {
       refetch()
     }

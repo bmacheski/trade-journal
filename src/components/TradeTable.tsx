@@ -17,6 +17,7 @@ import { createStyles, lighten, Theme } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import { GET_TRADES, REMOVE_TRADE } from '../graphql/queries/trades.query'
 import { useMutation } from '@apollo/react-hooks'
+import get from 'lodash/get'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -42,8 +43,18 @@ const useStyles = makeStyles((theme: Theme) => {
     sortArrow: {
       verticalAlign: 'middle',
     },
+    sellBadge: {
+      backgroundColor: '#f83245',
+      color: '#fff',
+    },
+    buyBadge: {
+      backgroundColor: '#1bc943',
+      color: '#fff',
+    },
   })
 })
+
+type SortDirection = 'asc' | 'desc'
 
 interface TradeTableProps {
   trades: any[]
@@ -65,7 +76,7 @@ function TradeTable({
   const classes = useStyles()
   const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
   const [sort, setSort] = React.useState<{
-    direction: 'asc' | 'desc'
+    direction: SortDirection
     column: string
     page: number
     skip: number
@@ -78,45 +89,48 @@ function TradeTable({
   const previousSort = usePrevious(sort)
 
   const tableConfigData = [
-    { header: 'Pair', key: 'pair', order: 1 },
+    {
+      header: 'Pair',
+      key: 'symbol.name',
+    },
     {
       header: 'Long / Short',
       key: 'action',
-      order: 2,
-      render: (trade) => (
-        <Chip label={trade.action === 'buy' ? 'Long' : 'Short'} />
-      ),
+      render: (trade) => {
+        const isBuy = trade.action === 'buy'
+        return (
+          <Chip
+            label={isBuy ? 'Long' : 'Short'}
+            className={isBuy ? classes.buyBadge : classes.sellBadge}
+          />
+        )
+      },
     },
-    { header: 'Quantity', key: 'quantity', order: 3 },
+    { header: 'Quantity', key: 'quantity' },
     {
       header: 'Entry Date',
       key: 'entry_date',
-      order: 4,
       render: (trade) => dateFormatter.toUserFriendlyFullDate(trade.entry_date),
     },
     {
       header: 'Exit Date',
       key: 'exit_date',
-      order: 5,
       render: (trade) => dateFormatter.toUserFriendlyFullDate(trade.exit_date),
     },
     {
       header: 'Entry Price',
       key: 'entry_price',
-      order: 6,
       render: (trade) => dollarFormatter.format(trade.entry_price),
     },
     {
       header: 'Exit Price',
       key: 'exit_price',
-      order: 7,
       render: (trade) => dollarFormatter.format(trade.exit_price),
     },
     {
       header: 'Actions',
       headerDisabled: true,
       key: 'actions',
-      order: 8,
       render: (trade) => {
         return (
           <>
@@ -222,11 +236,13 @@ function TradeTable({
                   key={trade.id}
                   onClick={onRowClick ? onRowClick.bind(null, trade.id) : noop}
                 >
-                  {tableConfigData.map((val) => (
-                    <TableCell component="th" scope="row">
-                      {val.render ? val.render(trade) : trade[val.key]}
-                    </TableCell>
-                  ))}
+                  {tableConfigData.map((val) => {
+                    return (
+                      <TableCell component="th" scope="row">
+                        {val.render ? val.render(trade) : get(trade, val.key)}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))}
             </TableBody>

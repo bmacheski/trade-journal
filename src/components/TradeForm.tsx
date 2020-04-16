@@ -1,5 +1,4 @@
 import React from 'react'
-import { Trade } from '../trade.model'
 import {
   TextField,
   Grid,
@@ -18,28 +17,46 @@ import {
   GET_TRADES,
   UPDATE_TRADE,
   CREATE_TRADE,
+  GET_SYMBOLS,
 } from '../graphql/queries/trades.query'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 function parseDateFields(values) {
   const { entry_date, exit_date } = values
-  // temp removal for hasura updates
-  delete values['__typename']
+
   return Object.assign(values, {
     entry_date: entry_date ? dateFormatter.toDateTime(entry_date) : null,
     exit_date: exit_date ? dateFormatter.toDateTime(exit_date) : null,
   })
 }
 
+interface SymbolOptionType {
+  id: number
+  name: string
+}
+
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
-  const [formTrade, setFormTrade] = React.useState<Trade | null>(null)
+  const [formTrade, setFormTrade] = React.useState<any | null>(null)
   const [redirect, setRedirect] = React.useState<string>('')
+
   const { data: { trades = [] } = {} }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
+  const { data: { symbols = [] } = {} }: any = useQuery(GET_SYMBOLS)
+
   const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
   const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
+
+  const inputProps = {
+    fullWidth: true,
+    variant: 'outlined' as 'outlined',
+    margin: 'dense' as any,
+    InputLabelProps: {
+      shrink: true,
+    },
+  }
 
   React.useEffect(() => {
     if (trades && trades.length) {
@@ -50,6 +67,10 @@ function TradeForm() {
   async function onSubmit() {
     if (updating || creating) return
     const formData = parseDateFields(formTrade)
+    // temp removal for hasura updates
+    delete formData['__typename']
+    delete formData['symbol']
+
     if (isNewTrade) {
       await createTrade({
         variables: { trade: formData },
@@ -72,9 +93,9 @@ function TradeForm() {
     )
   }
 
-  if (redirect) {
-    return <Redirect to={redirect} />
-  }
+  if (redirect) return <Redirect to={redirect} />
+
+  if (!formTrade && !isNewTrade) return <></>
 
   return (
     <div>
@@ -82,93 +103,74 @@ function TradeForm() {
       <form noValidate autoComplete="off">
         <Grid container spacing={3}>
           <Grid item md={6} xs={12}>
-            <TextField
-              fullWidth
-              helperText="Please specify the trade pair"
-              label="Pair"
-              margin="dense"
-              name="pair"
-              required
-              value={formTrade?.pair}
-              variant="outlined"
-              onChange={onFormFieldChange}
-              InputLabelProps={{
-                shrink: true,
+            <Autocomplete
+              id="controlled-demo"
+              options={symbols}
+              value={formTrade?.symbol}
+              defaultValue={formTrade?.symbol}
+              getOptionLabel={(option: SymbolOptionType) => option.name}
+              onChange={(_, newValue: SymbolOptionType | null) => {
+                if (!newValue) return
+                setFormTrade(
+                  Object.assign({}, formTrade, {
+                    pair: newValue.id,
+                  }),
+                )
               }}
+              renderInput={(params) => (
+                <TextField {...params} label="Symbol" {...inputProps} />
+              )}
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField
-              fullWidth
               label="Quantity"
               helperText="Please specify the quantity"
               name="quantity"
               type="number"
               required
-              margin="dense"
-              variant="outlined"
               value={formTrade?.quantity}
               onChange={onFormFieldChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              {...inputProps}
             />
           </Grid>
           <Grid item md={6} xs={12} container justify="space-around">
             <TextField
-              fullWidth
               label="Entry Date"
               type="datetime-local"
-              margin="dense"
               name="entry_date"
-              variant="outlined"
               value={formTrade?.entry_date}
               onChange={onFormFieldChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              {...inputProps}
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField
-              fullWidth
               label="Exit Date"
-              margin="dense"
               type="datetime-local"
               name="exit_date"
-              variant="outlined"
               onChange={onFormFieldChange}
               value={formTrade?.exit_date}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              {...inputProps}
             />
           </Grid>
 
           <Grid item md={6} xs={12}>
             <TextField
-              fullWidth
               label="Entry Price"
-              margin="dense"
               name="entry_price"
-              variant="outlined"
               value={formTrade?.entry_price}
               onChange={onFormFieldChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              {...inputProps}
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField
-              fullWidth
               label="Exit Price"
-              margin="dense"
               name="exit_price"
-              variant="outlined"
               value={formTrade?.exit_price}
               onChange={onFormFieldChange}
-              InputLabelProps={{ shrink: true }}
+              {...inputProps}
             />
           </Grid>
           <Grid item md={2} xs={12}>
@@ -198,30 +200,52 @@ function TradeForm() {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item md={10} xs={12}>
+          <Grid item md={5} xs={12}>
             <TextField
-              fullWidth
-              label="Image URL"
-              margin="dense"
-              variant="outlined"
-              name="image_url"
-              value={formTrade?.image_url}
+              label="Target"
+              name="target"
+              value={formTrade?.target}
               onChange={onFormFieldChange}
-              InputLabelProps={{ shrink: true }}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={5} xs={12}>
+            <TextField
+              label="Stop Loss"
+              name="stop_loss"
+              value={formTrade?.stop_loss}
+              onChange={onFormFieldChange}
+              {...inputProps}
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <TextField
+              label="Setup"
+              name="setup"
+              value={formTrade?.setup}
+              onChange={onFormFieldChange}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Image URL"
+              name="image_url"
+              value={formTrade?.image_url}
+              onChange={onFormFieldChange}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
               id="outlined-multiline-flexible"
               label="Notes"
-              InputLabelProps={{ shrink: true }}
               name="notes"
               multiline
               rowsMax={4}
               value={formTrade?.notes}
               onChange={onFormFieldChange}
-              fullWidth
-              variant="outlined"
+              {...inputProps}
             />
           </Grid>
         </Grid>

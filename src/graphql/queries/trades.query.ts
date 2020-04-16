@@ -14,9 +14,13 @@ const GET_TRADES = gql`
       entry_price
       exit_date
       exit_price
-      pair
+      symbol {
+        id
+        name
+      }
       quantity
       notes
+      stop_loss
     }
     trades_aggregate {
       aggregate {
@@ -65,6 +69,15 @@ const GET_METRICS = gql`
       return
       total_trades
       wins
+    }
+  }
+`
+
+export const GET_SYMBOLS = gql`
+  query {
+    symbols {
+      id
+      name
     }
   }
 `
