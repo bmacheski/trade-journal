@@ -3,24 +3,36 @@ import { useParams, Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
-import { Card, CardContent, CardHeader, makeStyles } from '@material-ui/core'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  makeStyles,
+  createStyles,
+} from '@material-ui/core'
 import { ROUTES } from '../Router'
 
-const useStyles = makeStyles({
-  card: {
-    marginTop: 10,
-  },
-  screenshot: {
-    maxHeight: '70vh',
-  },
+const useStyles = makeStyles(() => {
+  return createStyles({
+    card: {
+      marginTop: 10,
+    },
+    screenshot: {
+      maxHeight: '70vh',
+    },
+  })
 })
 
 function TradeDetail() {
   const classes = useStyles()
   const { id } = useParams()
-  const { data: { trades } = { trades: [] } }: any = useQuery(GET_TRADES, {
-    variables: { id },
-  })
+  const { data: { trade: trades } = { trade: [] } }: any = useQuery(
+    GET_TRADES,
+    {
+      variables: { id },
+    },
+  )
+
   const [redirect, setRedirect] = React.useState<string>('')
 
   function onDeleteSucces() {
@@ -33,7 +45,7 @@ function TradeDetail() {
 
   return trades.map((trade) => {
     return (
-      <div>
+      <div key={trade.id}>
         <Card className={classes.card}>
           <CardHeader title="Trade Details"></CardHeader>
           <TradeTable

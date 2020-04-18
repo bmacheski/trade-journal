@@ -49,7 +49,7 @@ const terminatingLink = split(
 )
 
 const link = ApolloLink.from([terminatingLink])
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({ addTypename: false })
 
 export default new ApolloClient({
   link,

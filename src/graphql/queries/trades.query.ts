@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 const GET_TRADES = gql`
-  query getTrades($id: Int, $skip: Int, $order: [trades_order_by!]) {
-    trades(
+  query getTrade($id: Int, $skip: Int, $order: [trade_order_by!]) {
+    trade(
       limit: 10
       offset: $skip
       where: { id: { _eq: $id } }
@@ -22,7 +22,7 @@ const GET_TRADES = gql`
       notes
       stop_loss
     }
-    trades_aggregate {
+    trade_aggregate {
       aggregate {
         count
       }
@@ -31,8 +31,8 @@ const GET_TRADES = gql`
 `
 
 const UPDATE_TRADE = gql`
-  mutation updateTrades($id: Int, $changes: trades_set_input) {
-    update_trades(where: { id: { _eq: $id } }, _set: $changes) {
+  mutation updateTrade($id: Int, $changes: trades_set_input) {
+    update_trade(where: { id: { _eq: $id } }, _set: $changes) {
       affected_rows
       returning {
         id
@@ -42,8 +42,8 @@ const UPDATE_TRADE = gql`
 `
 
 const CREATE_TRADE = gql`
-  mutation createTrades($trade: trades_insert_input!) {
-    insert_trades(objects: [$trade]) {
+  mutation createTrade($trade: trades_insert_input!) {
+    insert_trade(objects: [$trade]) {
       returning {
         id
       }
@@ -51,8 +51,8 @@ const CREATE_TRADE = gql`
   }
 `
 const REMOVE_TRADE = gql`
-  mutation deleteTrades($id: Int) {
-    delete_trades(where: { id: { _eq: $id } }) {
+  mutation deleteTrade($id: Int) {
+    delete_trade(where: { id: { _eq: $id } }) {
       affected_rows
       returning {
         id
@@ -63,21 +63,12 @@ const REMOVE_TRADE = gql`
 
 const GET_METRICS = gql`
   query {
-    trade_metrics {
+    trade_metric {
       longs
       shorts
       return
       total_trades
       wins
-    }
-  }
-`
-
-export const GET_SYMBOLS = gql`
-  query {
-    symbols {
-      id
-      name
     }
   }
 `

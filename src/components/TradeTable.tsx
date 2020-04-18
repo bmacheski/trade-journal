@@ -233,7 +233,7 @@ function TradeTable({
                 <TableRow
                   hover
                   className={classes.clickable}
-                  key={trade.id}
+                  key={`${trade.id}-row`}
                   onClick={onRowClick ? onRowClick.bind(null, trade.id) : noop}
                 >
                   {tableConfigData.map((val) => {

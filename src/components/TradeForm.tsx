@@ -4,10 +4,9 @@ import {
   Grid,
   Button,
   FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
@@ -17,9 +16,9 @@ import {
   GET_TRADES,
   UPDATE_TRADE,
   CREATE_TRADE,
-  GET_SYMBOLS,
 } from '../graphql/queries/trades.query'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { GET_SYMBOLS } from '../graphql/queries/symbols.query'
 
 function parseDateFields(values) {
   const { entry_date, exit_date } = values
@@ -38,10 +37,11 @@ interface SymbolOptionType {
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
+
   const [formTrade, setFormTrade] = React.useState<any | null>(null)
   const [redirect, setRedirect] = React.useState<string>('')
 
-  const { data: { trades = [] } = {} }: any = useQuery(GET_TRADES, {
+  const { data: { trade: trades = [] } = {} }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
   const { data: { symbols = [] } = {} }: any = useQuery(GET_SYMBOLS)
@@ -85,10 +85,12 @@ function TradeForm() {
     setRedirect(ROUTES.TRADE_LIST)
   }
 
-  function onFormFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onFormFieldChange({
+    target: { value, name },
+  }: React.ChangeEvent<HTMLInputElement>) {
     setFormTrade(
       Object.assign({}, formTrade, {
-        [event.target.name]: event.target.value,
+        [name]: value,
       }),
     )
   }
@@ -102,7 +104,7 @@ function TradeForm() {
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
       <form noValidate autoComplete="off">
         <Grid container spacing={3}>
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
             <Autocomplete
               id="controlled-demo"
               options={symbols}
@@ -122,7 +124,7 @@ function TradeForm() {
               )}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Quantity"
               helperText="Please specify the quantity"
@@ -134,7 +136,7 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12} container justify="space-around">
+          <Grid item md={3} xs={12} container justify="space-around">
             <TextField
               label="Entry Date"
               type="datetime-local"
@@ -144,7 +146,7 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Exit Date"
               type="datetime-local"
@@ -155,7 +157,7 @@ function TradeForm() {
             />
           </Grid>
 
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Entry Price"
               name="entry_price"
@@ -164,7 +166,7 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Exit Price"
               name="exit_price"
@@ -173,34 +175,29 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={2} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Buy / Sell</FormLabel>
-              <RadioGroup
-                aria-label="buy"
-                name="action"
+          <Grid item md={3} xs={12}>
+            <FormControl variant="outlined" {...inputProps}>
+              <InputLabel shrink id="demo-simple-select-outlined-label">
+                Buy / Sell
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
                 value={formTrade?.action}
-                onChange={onFormFieldChange}
+                onChange={({ target: { name, value } }) => {
+                  setFormTrade(
+                    Object.assign({}, formTrade, {
+                      [name as string]: value,
+                    }),
+                  )
+                }}
               >
-                <FormControlLabel
-                  control={
-                    <Radio value="buy" checked={formTrade?.action === 'buy'} />
-                  }
-                  label="Buy"
-                />
-                <FormControlLabel
-                  control={
-                    <Radio
-                      value="sell"
-                      checked={formTrade?.action === 'sell'}
-                    />
-                  }
-                  label="Sell"
-                />
-              </RadioGroup>
+                <MenuItem value="buy">Buy</MenuItem>
+                <MenuItem value="sell">Sell</MenuItem>
+              </Select>
             </FormControl>
           </Grid>
-          <Grid item md={5} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Target"
               name="target"
@@ -209,7 +206,7 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={5} xs={12}>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Stop Loss"
               name="stop_loss"
@@ -218,7 +215,25 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={3} xs={12}>
+            <TextField
+              label="Take Profit"
+              name="take_profit"
+              value={formTrade?.take_profit}
+              onChange={onFormFieldChange}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={3} xs={12}>
+            <TextField
+              label="Fees"
+              name="fees"
+              value={formTrade?.fees}
+              onChange={onFormFieldChange}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={3} xs={12}>
             <TextField
               label="Setup"
               name="setup"
@@ -236,7 +251,7 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={12} xs={12}>
+          <Grid item md={6} xs={12}>
             <TextField
               id="outlined-multiline-flexible"
               label="Notes"

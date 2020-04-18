@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
-import { Drawer } from '@material-ui/core'
+import { Drawer, Theme } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -12,7 +12,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import Link from '@material-ui/core/Link'
 import { ROUTES } from '../Router'
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
     width: 240,
     [theme.breakpoints.up('lg')]: {

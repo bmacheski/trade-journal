@@ -6,7 +6,10 @@ import { Redirect } from 'react-router-dom'
 
 function TradeList() {
   const {
-    data: { trades, trades_aggregate } = { trades: [], trades_aggregate: {} },
+    data: { trade: trades, trade_aggregate } = {
+      trade: [],
+      trade_aggregate: {},
+    },
     refetch,
   }: any = useQuery(GET_TRADES)
   const [redirect, setRedirect] = React.useState<string>('')
@@ -21,7 +24,7 @@ function TradeList() {
     <TradeTable
       onRowClick={onRowClick}
       trades={trades}
-      totalCount={trades_aggregate?.aggregate?.count}
+      totalCount={trade_aggregate?.aggregate?.count}
       onRefresh={refetch}
     />
   )
