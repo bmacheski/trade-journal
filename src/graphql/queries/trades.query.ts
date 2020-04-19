@@ -14,13 +14,18 @@ const GET_TRADES = gql`
       entry_price
       exit_date
       exit_price
+      fees
+      image_url
+      notes
+      quantity
+      risk_reward
+      stop_loss
       symbol {
         id
         name
       }
-      quantity
-      notes
-      stop_loss
+      target
+      take_profit
     }
     trade_aggregate {
       aggregate {
@@ -31,7 +36,7 @@ const GET_TRADES = gql`
 `
 
 const UPDATE_TRADE = gql`
-  mutation updateTrade($id: Int, $changes: trades_set_input) {
+  mutation updateTrade($id: Int, $changes: trade_set_input) {
     update_trade(where: { id: { _eq: $id } }, _set: $changes) {
       affected_rows
       returning {

@@ -11,6 +11,7 @@ import {
   createStyles,
 } from '@material-ui/core'
 import { ROUTES } from '../Router'
+import ErrorIcon from '@material-ui/icons/Error'
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -32,8 +33,8 @@ function TradeDetail() {
       variables: { id },
     },
   )
-
   const [redirect, setRedirect] = React.useState<string>('')
+  const [loadImageError, setLoadImageError] = React.useState<boolean>(false)
 
   function onDeleteSucces() {
     setRedirect(ROUTES.TRADE_LIST)
@@ -57,7 +58,26 @@ function TradeDetail() {
         {trade.image_url && (
           <Card className={classes.card}>
             <CardHeader title="Screenshot"></CardHeader>
-            <img className={classes.screenshot} src={trade.image_url} />
+            {loadImageError ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  margin: '5px',
+                }}
+              >
+                <ErrorIcon />
+                <span style={{ padding: '10px' }}>Error loading image</span>
+              </div>
+            ) : (
+              <img
+                className={classes.screenshot}
+                onError={(err) => {
+                  setLoadImageError(true)
+                }}
+                src={trade.image_url}
+              />
+            )}
           </Card>
         )}
         {trade.notes && (

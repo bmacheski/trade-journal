@@ -37,15 +37,12 @@ interface SymbolOptionType {
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
-
   const [formTrade, setFormTrade] = React.useState<any | null>(null)
   const [redirect, setRedirect] = React.useState<string>('')
-
   const { data: { trade: trades = [] } = {} }: any = useQuery(GET_TRADES, {
     variables: { id },
   })
   const { data: { symbols = [] } = {} }: any = useQuery(GET_SYMBOLS)
-
   const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
   const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
 
@@ -68,7 +65,6 @@ function TradeForm() {
     if (updating || creating) return
     const formData = parseDateFields(formTrade)
     // temp removal for hasura updates
-    delete formData['__typename']
     delete formData['symbol']
 
     if (isNewTrade) {
@@ -90,7 +86,7 @@ function TradeForm() {
   }: React.ChangeEvent<HTMLInputElement>) {
     setFormTrade(
       Object.assign({}, formTrade, {
-        [name]: value,
+        [name as string]: value,
       }),
     )
   }
@@ -184,10 +180,10 @@ function TradeForm() {
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
                 value={formTrade?.action}
-                onChange={({ target: { name, value } }) => {
+                onChange={({ target: { value } }) => {
                   setFormTrade(
                     Object.assign({}, formTrade, {
-                      [name as string]: value,
+                      action: value,
                     }),
                   )
                 }}
@@ -233,7 +229,20 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
+
           <Grid item md={3} xs={12}>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="R:R"
+              name="risk_reward"
+              multiline
+              rowsMax={4}
+              value={formTrade?.risk_reward}
+              onChange={onFormFieldChange}
+              {...inputProps}
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
             <TextField
               label="Setup"
               name="setup"
@@ -251,13 +260,13 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={12} xs={12}>
             <TextField
               id="outlined-multiline-flexible"
               label="Notes"
               name="notes"
               multiline
-              rowsMax={4}
+              rows={8}
               value={formTrade?.notes}
               onChange={onFormFieldChange}
               {...inputProps}
