@@ -26,11 +26,22 @@ const GET_TRADES = gql`
       }
       target
       take_profit
+
+      trade_setups {
+        setup_id
+        trade_id
+      }
     }
+
     trade_aggregate {
       aggregate {
         count
       }
+    }
+
+    setup {
+      id
+      name
     }
   }
 `

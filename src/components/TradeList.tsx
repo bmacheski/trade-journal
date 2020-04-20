@@ -2,7 +2,9 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_TRADES } from '../graphql/queries/trades.query'
 import TradeTable from './TradeTable'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
+import { ROUTES } from '../Router'
+import { Button } from '@material-ui/core'
 
 function TradeList() {
   const {
@@ -21,12 +23,19 @@ function TradeList() {
   if (redirect) return <Redirect to={redirect} />
 
   return (
-    <TradeTable
-      onRowClick={onRowClick}
-      trades={trades}
-      totalCount={trade_aggregate?.aggregate?.count}
-      onRefresh={refetch}
-    />
+    <>
+      <Link to={ROUTES.TREADE_CREATE}>
+        <Button variant="contained" color="primary">
+          Add Trade
+        </Button>
+      </Link>
+      <TradeTable
+        onRowClick={onRowClick}
+        trades={trades}
+        totalCount={trade_aggregate?.aggregate?.count}
+        onRefresh={refetch}
+      />
+    </>
   )
 }
 

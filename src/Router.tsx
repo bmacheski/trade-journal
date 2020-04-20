@@ -1,9 +1,10 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import MetricsDashboardPage from './pages/MetricsDashboardPage'
-import TradeListPage from './pages/TradeListPage'
-import TradeDetailPage from './pages/TradeDetailPage'
-import TradeFormPage from './pages/TradeFormPage'
+import MetricsDashboard from './components/Dashboard'
+import TradeList from './components/TradeList'
+import TradeForm from './components/TradeForm'
+import TradeDetail from './components/TradeDetail'
+import Layout from './components/Layout'
 
 function createRoute(...paths: string[]): string {
   const ROUTE_BASE = '/trades'
@@ -20,20 +21,22 @@ const ROUTES = {
 
 function Router() {
   return (
-    <Switch>
-      <Route exact path={ROUTES.DASHBOARD}>
-        <MetricsDashboardPage />
-      </Route>
-      <Route exact path={ROUTES.TRADE_LIST}>
-        <TradeListPage />
-      </Route>
-      <Route exact path={[ROUTES.TREADE_CREATE, ROUTES.TRADE_EDIT]}>
-        <TradeFormPage />
-      </Route>
-      <Route exact path={ROUTES.TRADE_DETAIL}>
-        <TradeDetailPage />
-      </Route>
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route exact path={ROUTES.DASHBOARD}>
+          <MetricsDashboard />
+        </Route>
+        <Route exact path={ROUTES.TRADE_LIST}>
+          <TradeList />
+        </Route>
+        <Route exact path={[ROUTES.TREADE_CREATE, ROUTES.TRADE_EDIT]}>
+          <TradeForm />
+        </Route>
+        <Route exact path={ROUTES.TRADE_DETAIL}>
+          <TradeDetail />
+        </Route>
+      </Switch>
+    </Layout>
   )
 }
 

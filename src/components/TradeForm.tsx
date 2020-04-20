@@ -19,6 +19,7 @@ import {
 } from '../graphql/queries/trades.query'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { GET_SYMBOLS } from '../graphql/queries/symbols.query'
+import { GET_SETUPS } from '../graphql/queries/setup.query'
 
 function parseDateFields(values) {
   const { entry_date, exit_date } = values
@@ -37,18 +38,26 @@ interface SymbolOptionType {
 function TradeForm() {
   const { id = 'new' } = useParams()
   const isNewTrade = id === 'new'
+
   const [formTrade, setFormTrade] = React.useState<any | null>(null)
   const [redirect, setRedirect] = React.useState<string>('')
-  const { data: { trade: trades = [] } = {} }: any = useQuery(GET_TRADES, {
-    variables: { id },
-  })
+
+  const { data: { trade: trades = [], setup = [] } = {} }: any = useQuery(
+    GET_TRADES,
+    {
+      variables: { id },
+    },
+  )
+
   const { data: { symbols = [] } = {} }: any = useQuery(GET_SYMBOLS)
+  const { data: { setup: setups = [] } = {} }: any = useQuery(GET_SETUPS)
+
   const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
   const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
 
   const inputProps = {
     fullWidth: true,
-    variant: 'outlined' as 'outlined',
+    variant: 'outlined' as any,
     margin: 'dense' as any,
     InputLabelProps: {
       shrink: true,
@@ -99,7 +108,7 @@ function TradeForm() {
     <div>
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
       <form noValidate autoComplete="off">
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           <Grid item md={3} xs={12}>
             <Autocomplete
               id="controlled-demo"
@@ -172,7 +181,7 @@ function TradeForm() {
             />
           </Grid>
           <Grid item md={3} xs={12}>
-            <FormControl variant="outlined" {...inputProps}>
+            <FormControl {...inputProps}>
               <InputLabel shrink id="demo-simple-select-outlined-label">
                 Buy / Sell
               </InputLabel>
@@ -242,16 +251,8 @@ function TradeForm() {
               {...inputProps}
             />
           </Grid>
-          <Grid item md={6} xs={12}>
-            <TextField
-              label="Setup"
-              name="setup"
-              value={formTrade?.setup}
-              onChange={onFormFieldChange}
-              {...inputProps}
-            />
-          </Grid>
-          <Grid item md={6} xs={12}>
+
+          <Grid item md={12} xs={12}>
             <TextField
               label="Image URL"
               name="image_url"
@@ -261,12 +262,29 @@ function TradeForm() {
             />
           </Grid>
           <Grid item md={12} xs={12}>
+            <Autocomplete
+              multiple
+              id="controlled-demo"
+              options={setups}
+              // value={formTrade?.symbol}
+              // defaultValue={formTrade?.symbol}
+              getOptionLabel={(option: any) => option.name}
+              onChange={(_, newValue) => {
+                console.log('hello', newValue)
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Setup" {...inputProps} />
+              )}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
             <TextField
               id="outlined-multiline-flexible"
               label="Notes"
               name="notes"
               multiline
               rows={8}
+              variant="outlined"
               value={formTrade?.notes}
               onChange={onFormFieldChange}
               {...inputProps}

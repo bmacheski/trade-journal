@@ -71,6 +71,7 @@ function TradeDetail() {
               </div>
             ) : (
               <img
+                alt=""
                 className={classes.screenshot}
                 onError={(err) => {
                   setLoadImageError(true)

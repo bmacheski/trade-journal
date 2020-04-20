@@ -1,23 +1,28 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { useMutation } from '@apollo/react-hooks'
+import { Chip, IconButton, TablePagination } from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
+import {
+  createStyles,
+  lighten,
+  makeStyles,
+  Theme,
+} from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import * as dollarFormatter from '../utils/dollar'
-import * as dateFormatter from '../utils/date'
-import { Chip, TablePagination, IconButton } from '@material-ui/core'
-import { Create, Delete, ArrowDropDown, ArrowDropUp } from '@material-ui/icons'
-import usePrevious from '../hooks/usePrevious'
-import noop from 'lodash/noop'
-import { createStyles, lighten, Theme } from '@material-ui/core/styles'
-import { Link } from 'react-router-dom'
-import { GET_TRADES, REMOVE_TRADE } from '../graphql/queries/trades.query'
-import { useMutation } from '@apollo/react-hooks'
+import { ArrowDropDown, ArrowDropUp, Create, Delete } from '@material-ui/icons'
 import get from 'lodash/get'
+import noop from 'lodash/noop'
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+import { GET_TRADES, REMOVE_TRADE } from '../graphql/queries/trades.query'
+import usePrevious from '../hooks/usePrevious'
+import * as dateFormatter from '../utils/date'
+import * as dollarFormatter from '../utils/dollar'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -154,18 +159,20 @@ function TradeTable({
   ) {
     evt.stopPropagation()
     if (deleting) return
-    await deleteTrade({
-      variables: { id },
-      refetchQueries: [{ query: GET_TRADES }],
-    })
-    onDeleteSuccess()
+    try {
+      await deleteTrade({
+        variables: { id },
+        refetchQueries: [{ query: GET_TRADES }],
+      })
+      onDeleteSuccess()
+    } catch {}
   }
 
   function onSortClick(column) {
     setSort((prev) => {
       return {
         direction:
-          prev.column == column && prev?.direction == 'asc' ? 'desc' : 'asc',
+          prev.column === column && prev?.direction === 'asc' ? 'desc' : 'asc',
         column,
         page: 0,
         skip: prev.skip,

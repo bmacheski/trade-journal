@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, Grid, CardHeader } from '@material-ui/core'
-import WinPercentage from '../components/WinPercentage'
-import EquityGraph from '../components/EquityGraph'
+import WinPercentage from './WinPercentage'
+import EquityGraph from './EquityGraph'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_METRICS } from '../graphql/queries/trades.query'
 

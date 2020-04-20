@@ -25,7 +25,7 @@ interface SidebarProps {
 const useStyles = makeStyles((theme: Theme) => {
   return {
     drawer: {
-      width: (props: SidebarProps) => props.drawerWidth,
+      width: 73,
       flexShrink: 0,
       whiteSpace: 'nowrap',
     },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => {
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: 'hidden',
-      width: theme.spacing(7) + 1,
+      width: 70,
       [theme.breakpoints.up('sm')]: {
         width: theme.spacing(9) + 1,
       },
