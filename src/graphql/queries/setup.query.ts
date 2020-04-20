@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 const GET_SETUPS = gql`
-  query {
+  query getSetup {
     setup {
       id
       name

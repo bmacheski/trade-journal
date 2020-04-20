@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import { ROUTES } from '../Router'
 import ErrorIcon from '@material-ui/icons/Error'
+import { GetTradeQueryVariables, GetTradeQuery } from '../generated/graphql'
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -26,13 +27,15 @@ const useStyles = makeStyles(() => {
 
 function TradeDetail() {
   const classes = useStyles()
-  const { id } = useParams()
-  const { data: { trade: trades } = { trade: [] } }: any = useQuery(
-    GET_TRADES,
-    {
-      variables: { id },
-    },
-  )
+  const { id }: any = useParams()
+
+  const { data: { trade: trades = [] } = {} } = useQuery<
+    GetTradeQuery,
+    GetTradeQueryVariables
+  >(GET_TRADES, {
+    variables: { id },
+  })
+
   const [redirect, setRedirect] = React.useState<string>('')
   const [loadImageError, setLoadImageError] = React.useState<boolean>(false)
 
@@ -44,54 +47,58 @@ function TradeDetail() {
 
   if (!trades) return null
 
-  return trades.map((trade) => {
-    return (
-      <div key={trade.id}>
-        <Card className={classes.card}>
-          <CardHeader title="Trade Details"></CardHeader>
-          <TradeTable
-            trades={trades}
-            showPagination={false}
-            onDeleteSuccess={onDeleteSucces}
-          />
-        </Card>
-        {trade.image_url && (
-          <Card className={classes.card}>
-            <CardHeader title="Screenshot"></CardHeader>
-            {loadImageError ? (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  margin: '5px',
-                }}
-              >
-                <ErrorIcon />
-                <span style={{ padding: '10px' }}>Error loading image</span>
-              </div>
-            ) : (
-              <img
-                alt=""
-                className={classes.screenshot}
-                onError={(err) => {
-                  setLoadImageError(true)
-                }}
-                src={trade.image_url}
+  return (
+    <>
+      {trades.map((trade) => {
+        return (
+          <div key={trade.id}>
+            <Card className={classes.card}>
+              <CardHeader title="Trade Details"></CardHeader>
+              <TradeTable
+                trades={trades}
+                showPagination={false}
+                onDeleteSuccess={onDeleteSucces}
               />
-            )}
-          </Card>
-        )}
-        {trade.notes && (
-          <Card className={classes.card}>
-            <CardHeader title="Notes"></CardHeader>
-            <Card>
-              <CardContent>{trade.notes}</CardContent>
             </Card>
-          </Card>
-        )}
-      </div>
-    )
-  })
+            {trade.image_url && (
+              <Card className={classes.card}>
+                <CardHeader title="Screenshot"></CardHeader>
+                {loadImageError ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      margin: '5px',
+                    }}
+                  >
+                    <ErrorIcon />
+                    <span style={{ padding: '10px' }}>Error loading image</span>
+                  </div>
+                ) : (
+                  <img
+                    alt=""
+                    className={classes.screenshot}
+                    onError={(err) => {
+                      setLoadImageError(true)
+                    }}
+                    src={trade.image_url}
+                  />
+                )}
+              </Card>
+            )}
+            {trade.notes && (
+              <Card className={classes.card}>
+                <CardHeader title="Notes"></CardHeader>
+                <Card>
+                  <CardContent>{trade.notes}</CardContent>
+                </Card>
+              </Card>
+            )}
+          </div>
+        )
+      })}
+    </>
+  )
 }
 
 export default TradeDetail

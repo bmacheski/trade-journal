@@ -79,6 +79,7 @@ function TradeTable({
   onDeleteSuccess = noop,
 }: TradeTableProps) {
   const classes = useStyles()
+
   const [deleteTrade, { loading: deleting }] = useMutation(REMOVE_TRADE)
   const [sort, setSort] = React.useState<{
     direction: SortDirection

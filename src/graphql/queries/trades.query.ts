@@ -58,7 +58,7 @@ const UPDATE_TRADE = gql`
 `
 
 const CREATE_TRADE = gql`
-  mutation createTrade($trade: trades_insert_input!) {
+  mutation createTrade($trade: trade_insert_input!) {
     insert_trade(objects: [$trade]) {
       returning {
         id
@@ -78,7 +78,7 @@ const REMOVE_TRADE = gql`
 `
 
 const GET_METRICS = gql`
-  query {
+  query getMetric {
     trade_metric {
       longs
       shorts

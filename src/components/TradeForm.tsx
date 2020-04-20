@@ -20,6 +20,14 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { GET_SYMBOLS } from '../graphql/queries/symbols.query'
 import { GET_SETUPS } from '../graphql/queries/setup.query'
+import {
+  UpdateTradeMutation,
+  CreateTradeMutation,
+  GetTradeQueryVariables,
+  GetTradeQuery,
+  GetSymbolQuery,
+  GetSetupQuery,
+} from '../generated/graphql'
 
 function parseDateFields(values) {
   const { entry_date, exit_date } = values
@@ -36,24 +44,32 @@ interface SymbolOptionType {
 }
 
 function TradeForm() {
-  const { id = 'new' } = useParams()
+  const { id = 'new' }: any = useParams()
   const isNewTrade = id === 'new'
 
   const [formTrade, setFormTrade] = React.useState<any | null>(null)
   const [redirect, setRedirect] = React.useState<string>('')
 
-  const { data: { trade: trades = [], setup = [] } = {} }: any = useQuery(
-    GET_TRADES,
-    {
-      variables: { id },
-    },
+  const { data: { trade: trades = [] } = {} } = useQuery<
+    GetTradeQuery,
+    GetTradeQueryVariables
+  >(GET_TRADES, {
+    variables: { id },
+  })
+
+  const { data: { symbol: symbols } = { symbol: [] } } = useQuery<
+    GetSymbolQuery
+  >(GET_SYMBOLS)
+  const { data: { setup: setups } = { setup: [] } } = useQuery<GetSetupQuery>(
+    GET_SETUPS,
   )
 
-  const { data: { symbols = [] } = {} }: any = useQuery(GET_SYMBOLS)
-  const { data: { setup: setups = [] } = {} }: any = useQuery(GET_SETUPS)
-
-  const [updateTrade, { loading: updating }] = useMutation(UPDATE_TRADE)
-  const [createTrade, { loading: creating }] = useMutation(CREATE_TRADE)
+  const [updateTrade, { loading: updating }] = useMutation<UpdateTradeMutation>(
+    UPDATE_TRADE,
+  )
+  const [createTrade, { loading: creating }] = useMutation<CreateTradeMutation>(
+    CREATE_TRADE,
+  )
 
   const inputProps = {
     fullWidth: true,

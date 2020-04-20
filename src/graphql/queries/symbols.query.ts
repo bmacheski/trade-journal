@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 const GET_SYMBOLS = gql`
-  query {
+  query getSymbol {
     symbol {
       id
       name

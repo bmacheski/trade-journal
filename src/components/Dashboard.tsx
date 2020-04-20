@@ -4,13 +4,14 @@ import WinPercentage from './WinPercentage'
 import EquityGraph from './EquityGraph'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_METRICS } from '../graphql/queries/trades.query'
+import { GetMetricQuery } from '../generated/graphql'
 
 function Dashboard() {
   const {
     data: { trade_metric } = { trade_metric: [] },
     refetch,
     loading,
-  }: any = useQuery(GET_METRICS)
+  } = useQuery<GetMetricQuery>(GET_METRICS)
   const metrics = trade_metric[0] || {}
 
   React.useEffect(() => {
