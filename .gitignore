@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+client/node_modules
 /.pnp
 .pnp.js
 
@@ -21,3 +21,20 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore bundler config.
+/server/.bundle
+
+# Ignore all logfiles and tempfiles.
+/server/log/*
+/server/tmp/*
+/server!/log/.keep
+/server/!/tmp/.keep
+
+# Ignore uploaded files in development.
+/server/storage/*
+/server/!/storage/.keep
+/server/.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/server/config/master.key
