@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
-import { Drawer, Theme } from '@material-ui/core'
+import { Drawer, Theme, Tooltip } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -14,8 +14,8 @@ import { ROUTES } from '../Router'
 import { useTheme, Divider } from '@material-ui/core'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import SettingsIcon from '@material-ui/icons/Settings'
 import IconButton from '@material-ui/core/IconButton'
+import SettingsIcon from '@material-ui/icons/Settings'
 
 interface SidebarProps {
   open: boolean
@@ -93,28 +93,34 @@ function Sidebar(props: SidebarProps) {
       <Divider />
       <List>
         <Link component={RouterLink} to={ROUTES.DASHBOARD}>
-          <ListItem button>
-            <ListItemIcon>
-              <Dashboard />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
+          <Tooltip title="Dashboard" placement="right">
+            <ListItem button>
+              <ListItemIcon>
+                <Dashboard />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+          </Tooltip>
         </Link>
         <Link component={RouterLink} to={ROUTES.TRADE_LIST}>
-          <ListItem button>
-            <ListItemIcon>
-              <ShowChart />
-            </ListItemIcon>
-            <ListItemText primary="Trades" />
-          </ListItem>
+          <Tooltip title="Trades" placement="right">
+            <ListItem button>
+              <ListItemIcon>
+                <ShowChart />
+              </ListItemIcon>
+              <ListItemText primary="Trades" />
+            </ListItem>
+          </Tooltip>
         </Link>
         <Link component={RouterLink} to={ROUTES.ADMIN}>
-          <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Admin" />
-          </ListItem>
+          <Tooltip title="Admin" placement="right">
+            <ListItem button>
+              <ListItemIcon>
+                <Settings />
+              </ListItemIcon>
+              <ListItemText primary="Admin" />
+            </ListItem>
+          </Tooltip>
         </Link>
       </List>
     </Drawer>

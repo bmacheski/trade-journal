@@ -1,32 +1,14 @@
-import {
-  Chip,
-  IconButton,
-  TablePagination,
-  TableSortLabel,
-} from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import { Chip } from '@material-ui/core'
 import {
   createStyles,
   lighten,
   makeStyles,
   Theme,
 } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import { Create, Delete } from '@material-ui/icons'
-import get from 'lodash/get'
-import noop from 'lodash/noop'
-import React, { Dispatch } from 'react'
-import { Link } from 'react-router-dom'
-import usePrevious from '../hooks/usePrevious'
+import React from 'react'
 import * as dateFormatter from '../utils/date'
 import * as dollarFormatter from '../utils/dollar'
-import { deleteTrade } from '../api/trades'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import MaterialTable from 'material-table'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -38,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     root: {
       width: '100%',
+      marginTop: theme.spacing(2),
     },
     paper: {
       width: '100%',
@@ -64,42 +47,25 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 interface TradeTableProps {
-  loading: boolean
   trades: any[]
-  showPagination?: boolean
-  totalCount?: number
-  onRowClick?: (tradeId: string) => void
   onDeleteSuccess?: () => void
-  dispatch?: Dispatch<any>
-  sort?: string
-  sortDirection?: 'asc' | 'desc' | null
-  page?: number | null
+  onEditClick: (id) => void
+  onRowClick?: (a, b) => void
 }
 
-function TradeTable({
-  trades,
-  totalCount,
-  showPagination = true,
-  onRowClick,
-  onDeleteSuccess = noop,
-  loading,
-  dispatch = noop,
-  sort = '',
-  sortDirection = null,
-  page = null,
-}: TradeTableProps) {
+function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
   const classes = useStyles()
 
-  const tableConfig = [
+  const columns = [
     {
-      header: 'Pair',
-      key: 'pair.name',
+      field: 'pair.name',
+      title: 'Pair',
     },
     {
-      header: 'Long / Short',
-      key: 'action',
-      render: (trade) => {
-        const isBuy = trade.action === 'buy'
+      title: 'Side',
+      field: 'action',
+      render: (row) => {
+        const isBuy = row.action === 'buy'
         return (
           <Chip
             label={isBuy ? 'Long' : 'Short'}
@@ -108,143 +74,80 @@ function TradeTable({
         )
       },
     },
-    { header: 'Quantity', key: 'quantity' },
     {
-      header: 'Entry Date',
-      key: 'entry_date',
-      render: (trade) => dateFormatter.toUserFriendlyFullDate(trade.entry_date),
-    },
-    {
-      header: 'Exit Date',
-      key: 'exit_date',
-      render: (trade) => dateFormatter.toUserFriendlyFullDate(trade.exit_date),
-    },
-    {
-      header: 'Entry Price',
-      key: 'entry_price',
-      render: (trade) => dollarFormatter.format(trade.entry_price),
-    },
-    {
-      header: 'Exit Price',
-      key: 'exit_price',
-      render: (trade) => dollarFormatter.format(trade.exit_price),
-    },
-    {
-      header: 'Actions',
-      headerDisabled: true,
-      key: 'actions',
-      render: (trade) => {
+      title: 'Status',
+      render: (row) => {
+        const isOpen = !row.exit_date
         return (
-          <>
-            <Link to={`/trades/${trade.id}/edit`}>
-              <IconButton>
-                <Create />
-              </IconButton>
-            </Link>
-            <IconButton>
-              <Delete onClick={(e) => onDeleteClick(e, trade.id)} />
-            </IconButton>
-          </>
+          <Chip
+            label={isOpen ? 'Open' : 'Closed'}
+            className={isOpen ? classes.buyBadge : classes.sellBadge}
+          />
         )
       },
     },
+    {
+      field: 'quantity',
+      title: 'Quantity',
+    },
+    {
+      field: 'entry_date',
+      title: 'Entry Date',
+      render: (val) => dateFormatter.toShortDate(val.entry_date),
+    },
+    {
+      field: 'exit_date',
+      title: 'Exit Date',
+      render: (val) => dateFormatter.toShortDate(val.exit_date),
+    },
+    {
+      field: 'entry_price',
+      title: 'Entry price',
+      render: (val) => dollarFormatter.format(val.entry_price),
+    },
+    {
+      field: 'exit_price',
+      title: 'Exit price',
+      render: (val) => dollarFormatter.format(val.exit_price),
+    },
+    {
+      field: 'risk_reward_ratio',
+      title: 'RRR Planned',
+      render: (val) => Number(val.risk_reward_ratio).toFixed(2),
+    },
+    {
+      field: 'risk_multiple',
+      title: 'R-Multiple',
+      render: (val) => Number(val.risk_multiple).toFixed(1),
+    },
   ]
-
-  async function onDeleteClick(
-    evt: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    id: string,
-  ) {
-    evt.stopPropagation()
-
-    try {
-      await deleteTrade(id)
-      onDeleteSuccess()
-    } catch (err) {}
-  }
-
-  function onSortClick(column) {
-    dispatch({
-      type: 'CHANGE_SORT',
-      sort: column,
-    })
-  }
-
-  function onPageChange(_, page) {
-    dispatch({
-      type: 'CHANGE_PAGE',
-      page: page,
-    })
-  }
-
-  function renderTable() {
-    if (loading) return <CircularProgress />
-    if (!trades.length) return <div>No results found.</div>
-
-    return (
-      <>
-        {trades.map((trade) => (
-          <TableRow
-            hover
-            className={classes.clickable}
-            key={`${trade.id}-row`}
-            onClick={onRowClick ? onRowClick.bind(null, trade.id) : noop}
-          >
-            {tableConfig.map((val) => {
-              return (
-                <TableCell component="th" scope="row">
-                  {val.render ? val.render(trade) : get(trade, val.key)}
-                </TableCell>
-              )
-            })}
-          </TableRow>
-        ))}
-      </>
-    )
-  }
 
   if (!trades) return null
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <TableContainer component={Paper} className={classes.container}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                {tableConfig.map((col) => (
-                  <TableCell
-                    variant="head"
-                    sortDirection={sortDirection || undefined}
-                    onClick={() => {
-                      if (col.headerDisabled) return
-                      onSortClick(col.key)
-                    }}
-                    className={classes.clickable}
-                  >
-                    <TableSortLabel
-                      active={sort === col.key}
-                      direction={sortDirection || undefined}
-                    >
-                      {col.header}
-                    </TableSortLabel>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>{renderTable()}</TableBody>
-          </Table>
-        </TableContainer>
-        {showPagination && (
-          <TablePagination
-            rowsPerPageOptions={[]}
-            component="div"
-            count={totalCount || 1}
-            rowsPerPage={10}
-            page={page || 0}
-            onChangePage={onPageChange}
-          />
-        )}
-      </Paper>
+      <MaterialTable
+        columns={columns}
+        data={trades}
+        title="Trades"
+        onRowClick={onRowClick}
+        options={{
+          actionsColumnIndex: -1,
+          search: false,
+        }}
+        actions={[
+          {
+            icon: 'edit',
+            tooltip: 'Edit trade',
+            onClick: (_, rowData) => onEditClick(rowData.id),
+          },
+          {
+            icon: 'delete',
+            tooltip: 'Delete Trade',
+            onClick: (_, rowData) => onEditClick(rowData.id),
+          },
+        ]}
+      />
     </div>
   )
 }

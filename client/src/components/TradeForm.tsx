@@ -7,6 +7,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Chip,
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
@@ -44,7 +45,7 @@ function TradeForm() {
 
   const inputProps = {
     fullWidth: true,
-    variant: 'outlined' as any,
+
     margin: 'dense' as any,
     InputLabelProps: {
       shrink: true,
@@ -85,6 +86,22 @@ function TradeForm() {
   return (
     <div>
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
+
+      <div>
+        {trade?.risk_multiple && (
+          <Chip
+            color="primary"
+            label={`R Multiple: ${Number(trade.risk_multiple).toFixed(1)}`}
+          />
+        )}
+        {trade?.risk_reward_ratio && (
+          <Chip
+            style={{ marginLeft: '10px' }}
+            color="primary"
+            label={`RR: ${Number(trade.risk_reward_ratio).toFixed(2)}`}
+          />
+        )}
+      </div>
       <Formik
         enableReinitialize={true}
         initialValues={trade || {}}
@@ -96,7 +113,7 @@ function TradeForm() {
           return (
             <form noValidate autoComplete="off" onSubmit={props.handleSubmit}>
               <Grid container spacing={4}>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <Autocomplete
                     id="symbol-autocomplete"
                     options={pairs}
@@ -104,14 +121,18 @@ function TradeForm() {
                     getOptionLabel={(option: SymbolOptionType) => option.name}
                     onChange={(_, val) => props.setFieldValue('pair', val)}
                     renderInput={(params) => (
-                      <TextField {...params} label="Symbol" {...inputProps} />
+                      <TextField
+                        {...params}
+                        label="Symbol"
+                        required
+                        {...inputProps}
+                      />
                     )}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Quantity"
-                    helperText="Please specify the quantity"
                     name="quantity"
                     type="number"
                     required
@@ -120,10 +141,16 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12} container justify="space-around">
+                <Grid
+                  item
+                  lg={3}
+                  md={3}
+                  xs={12}
+                  container
+                  justify="space-around"
+                >
                   <DateTimePicker
                     label="Entry Date"
-                    inputVariant="outlined"
                     name="entry_date"
                     value={props.values?.entry_date}
                     onChange={(val) => {
@@ -132,9 +159,8 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <DateTimePicker
-                    inputVariant="outlined"
                     label="Exit Date"
                     name="exit_date"
                     onChange={(val) => {
@@ -145,7 +171,7 @@ function TradeForm() {
                   />
                 </Grid>
 
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Entry Price"
                     name="entry_price"
@@ -154,7 +180,7 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Exit Price"
                     name="exit_price"
@@ -163,7 +189,7 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <FormControl {...inputProps}>
                     <InputLabel shrink id="action-select-label">
                       Buy / Sell
@@ -180,16 +206,7 @@ function TradeForm() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item md={3} xs={12}>
-                  <TextField
-                    label="Target"
-                    name="target"
-                    value={props.values?.target}
-                    onChange={props.handleChange}
-                    {...inputProps}
-                  />
-                </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Stop Loss"
                     name="stop_loss"
@@ -198,7 +215,7 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Take Profit"
                     name="take_profit"
@@ -207,7 +224,24 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item lg={3} md={3} xs={12}>
+                  <FormControl {...inputProps}>
+                    <InputLabel shrink id="action-select-label">
+                      Original Take Profit Hit
+                    </InputLabel>
+                    <Select
+                      labelId="tp-hit-select-label"
+                      id="tp-hit-select"
+                      name="take_profit_hit"
+                      value={props.values?.take_profit_hit || false}
+                      onChange={props.handleChange}
+                    >
+                      <MenuItem value="yes">Yes</MenuItem>
+                      <MenuItem value="no">No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Fees"
                     name="fees"
@@ -216,30 +250,7 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-
-                <Grid item md={3} xs={12}>
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="R:R"
-                    name="risk_reward"
-                    multiline
-                    rowsMax={4}
-                    value={props.values?.risk_reward}
-                    onChange={props.handleChange}
-                    {...inputProps}
-                  />
-                </Grid>
-
-                <Grid item md={12} xs={12}>
-                  <TextField
-                    label="Image URL"
-                    name="image_url"
-                    value={props.values?.image_url}
-                    onChange={props.handleChange}
-                    {...inputProps}
-                  />
-                </Grid>
-                <Grid item md={12} xs={12}>
+                <Grid item lg={12} md={12} xs={12}>
                   <Autocomplete
                     multiple
                     id="setup-autocomplete"
@@ -259,11 +270,20 @@ function TradeForm() {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <TextField
+                    label="Screenshot URL"
+                    name="image_url"
+                    value={props.values?.image_url}
+                    onChange={props.handleChange}
+                    {...inputProps}
+                  />
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <TextField
                     label="Notes"
                     name="notes"
+                    variant="outlined"
                     multiline
                     rows={8}
-                    variant="outlined"
                     value={props.values?.notes}
                     onChange={props.handleChange}
                     {...inputProps}

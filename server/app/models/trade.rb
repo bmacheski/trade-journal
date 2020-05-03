@@ -5,22 +5,32 @@ class Trade < ApplicationRecord
 
   def self.metrics
     query = <<-SQL
-      WITH cte AS (
-        SELECT date_trunc('month', entry_date) AS mon
-          ,SUM(
-            CASE WHEN action = 'buy' THEN (quantity * exit_price) - (quantity * entry_price) 
-            ELSE (quantity * entry_price) - (quantity * exit_price) 
-          END) AS mon_sum
-          FROM trades 
-          GROUP BY 1
-      )
-      SELECT EXTRACT(MONTH FROM mon) AS month
-        ,EXTRACT(YEAR FROM mon) AS year
-        ,SUM(c.mon_sum) OVER (ORDER BY mon) AS running_sum
-      FROM (SELECT min(mon) AS min_mon FROM cte) init
-        ,generate_series(init.min_mon, now(), interval '1 month') mon
-      LEFT JOIN cte c USING (mon)
-      ORDER BY mon;
+      select count(case when action = 'buy' then 1 else null end) long_count
+        ,count(
+          case when action = 'buy' and entry_price < exit_price then 1
+          else null
+          end
+        ) long_win_count
+        ,count(case when action = 'sell' then 1 else null end) short_count
+        ,count(
+          case when action = 'sell' and exit_price < entry_price then 1
+          else null
+          end
+        ) short_win_count
+        ,count(id) as total_count
+        ,count(
+          case when action = 'buy' and entry_price < exit_price then 1
+          when action = 'sell' and entry_price > exit_price then 1
+          else null
+          end
+        ) win_count
+        ,count(
+          case when action = 'buy' and entry_price > exit_price then 1
+          when action = 'sell' and entry_price < exit_price then 1
+          else null
+          end
+        ) loss_count
+      from trades;
     SQL
 
     ActiveRecord::Base.connection.execute(query)

@@ -1,7 +1,7 @@
 class TradeSerializer < ActiveModel::Serializer
   attributes :id, :action, :pair, :quantity, :entry_date, :exit_date,
-             :entry_price, :exit_price, :notes, :risk_reward, :image_url, :trade_setups,
-             :stop_loss, :take_profit, :fees, :target
+             :entry_price, :exit_price, :notes, :image_url, :trade_setups,
+             :stop_loss, :take_profit, :fees, :risk_reward_ratio, :risk_multiple
 
   def pair
     return if object.pair.nil?
@@ -22,5 +22,26 @@ class TradeSerializer < ActiveModel::Serializer
         setup_id: t_setup.setup.id
       }
     end
+  end
+
+  def risk_multiple
+    return nil if required_values_missing(object.exit_price)
+
+    (object.exit_price - object.entry_price) / (object.entry_price - object.stop_loss)
+  end
+
+  def risk_reward_ratio
+    return nil if required_values_missing
+
+    potential_risk = (object.entry_price - object.stop_loss).abs
+    potential_reward = (object.entry_price - object.take_profit).abs
+    potential_reward / potential_risk
+  end
+
+  private
+
+  def required_values_missing(*additional_values)
+    fields = [object.entry_price, object.stop_loss, object.take_profit] + additional_values
+    fields.any?(&:nil?)
   end
 end

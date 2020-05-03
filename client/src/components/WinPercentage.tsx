@@ -33,7 +33,7 @@ function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
   const classes = useStyles()
 
   const [config, setConfig] = React.useState({
-    labels: ['Wins'],
+    labels: ['Win Rate'],
     series: [],
     options: {
       chart: {

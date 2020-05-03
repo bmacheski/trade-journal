@@ -1,18 +1,38 @@
 import React from 'react'
-import { Card, CardContent, Grid, CardHeader } from '@material-ui/core'
+import {
+  Card,
+  CardContent,
+  Grid,
+  CardHeader,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core'
 import WinPercentage from './WinPercentage'
-import EquityGraph from './EquityGraph'
 import { getMetrics } from '../api/metrics'
 
-function Dashboard() {
-  const [metrics, setMetrics] = React.useState<any>({})
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    card: {
+      minHeight: 100,
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      fontSize: 20,
+    },
+    long: {
+      color: 'green',
+    },
+    short: {
+      color: 'red',
+    },
+  })
+})
 
-  const stats = [
-    { value: metrics.return, name: 'Total Return' },
-    { value: metrics.total_trades, name: 'Total Trades' },
-    { value: metrics.longs, name: 'Longs' },
-    { value: metrics.shorts, name: 'Shorts' },
-  ]
+function Dashboard() {
+  const classes = useStyles()
+
+  const [metrics, setMetrics] = React.useState<any>({})
 
   React.useEffect(() => {
     getMetrics().then((res) => setMetrics(res))
@@ -20,34 +40,42 @@ function Dashboard() {
 
   return (
     <Grid container spacing={4}>
-      {stats.map((s) => {
-        return (
-          <Grid item lg={3} sm={6} xl={3} xs={12} key={s.name}>
-            <Card>
-              <CardContent>
-                {s.name}: {s.value}
-              </CardContent>
-            </Card>
-          </Grid>
-        )
-      })}
-      <Grid item lg={8} md={12} xl={9} xs={12}>
-        <Card>
-          <CardHeader title="Equity Graph" />
+      <Grid item lg={6} sm={6} xl={4} xs={12}>
+        <Card className={classes.card}>
+          <CardContent>Total Trade Count: {metrics.total_count}</CardContent>
+        </Card>
+      </Grid>
+      <Grid item lg={6} sm={6} xl={4} xs={12}>
+        <Card className={classes.card}>
           <CardContent>
-            <EquityGraph />
+            <div className={classes.long}> Longs: {metrics.long_count}</div>
+            <div>Win Count: {metrics.long_win_count}</div>
           </CardContent>
         </Card>
       </Grid>
-      <Grid item lg={4} md={6} xl={3} xs={12}>
+      <Grid item lg={6} sm={6} xl={4} xs={12}>
+        <Card className={classes.card}>
+          <CardContent>
+            <div className={classes.short}> Shorts: {metrics.short_count}</div>
+            <div>Win Count: {metrics.short_win_count}</div>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item lg={6} md={12} xl={6} xs={12}>
         <Card>
           <CardHeader title="Wins / Losses" />
           <CardContent>
             <WinPercentage
-              winCount={metrics.wins}
-              totalCount={metrics.total_trades}
-            />
+              winCount={metrics.win_count}
+              totalCount={metrics.total_count}
+            ></WinPercentage>
           </CardContent>
+        </Card>
+      </Grid>
+      <Grid item lg={6} md={12} xl={6} xs={12}>
+        <Card>
+          <CardHeader title="Equity Graph" />
+          <CardContent></CardContent>
         </Card>
       </Grid>
     </Grid>

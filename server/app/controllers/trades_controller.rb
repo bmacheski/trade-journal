@@ -43,7 +43,7 @@ class TradesController < ApplicationController
 
   def metrics
     metrics = Trade.metrics
-    render json: metrics, status: :ok
+    render json: metrics.first, status: :ok
   end
 
   private

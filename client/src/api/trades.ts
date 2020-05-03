@@ -1,49 +1,41 @@
 import { API_URL } from '../constants/url'
+import { extractData } from './common'
+
+const TRADES_URL = `${API_URL}/trades`
 
 export function getTrade(id: number | null = null) {
-  const url = `${API_URL}/trades/${id}`
-  return fetch(url).then(async (res) => {
-    const json = await res.json()
-    return json
-  })
+  const url = `${TRADES_URL}/${id}`
+  return fetch(url).then(extractData)
 }
 
 export function getTrades(page) {
-  let url = `${API_URL}/trades`
+  let url = TRADES_URL
   if (page) url += `?page=${page}`
-  return fetch(url).then(async (res) => {
-    const json = await res.json()
-    return json
-  })
+  return fetch(url).then(extractData)
 }
 
 export function createTrade(data) {
-  const url = `${API_URL}/trades`
-  return fetch(url, {
+  return fetch(TRADES_URL, {
     method: 'post',
     body: JSON.stringify({ trade: data }),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(async (res) => {
-    return res
   })
 }
 
 export function updateTrade(id, data) {
-  const url = `${API_URL}/trades/${id}`
+  const url = `${TRADES_URL}/${id}`
   return fetch(url, {
     method: 'put',
     body: JSON.stringify({ trade: data }),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(async (res) => {
-    return res
   })
 }
 
 export function deleteTrade(id) {
-  const url = `${API_URL}/trades/${id}`
-  return fetch(url, { method: 'delete' }).then((res) => res)
+  const url = `${TRADES_URL}/${id}`
+  return fetch(url, { method: 'delete' })
 }

@@ -1,11 +1,14 @@
 import React from 'react'
-import TradeTable from './TradeTable'
 import { Redirect, Link } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import { Button } from '@material-ui/core'
 import { getTrades } from '../api/trades'
+import first from 'lodash/first'
+import TradeTable from './TradeTable'
 
 function TradeList() {
+  const [redirect, setRedirect] = React.useState<string>('')
+
   const [state, dispatch] = React.useReducer(
     (state, action) => {
       switch (action.type) {
@@ -71,12 +74,6 @@ function TradeList() {
     handleGetTrades()
   }, [])
 
-  const [redirect, setRedirect] = React.useState<string>('')
-
-  function onRowClick(tradeId: string) {
-    setRedirect(`/trades/${tradeId}`)
-  }
-
   if (redirect) return <Redirect to={redirect} />
 
   return (
@@ -87,15 +84,11 @@ function TradeList() {
         </Button>
       </Link>
       <TradeTable
-        loading={state.loading}
-        onRowClick={onRowClick}
         trades={state.trades}
-        totalCount={0}
-        sort={state.sort}
-        sortDirection={state.sortDirection}
-        page={state.page}
-        dispatch={dispatch}
-        onDeleteSuccess={handleGetTrades}
+        onRowClick={(_, row) => {
+          setRedirect(`/trades/${row.id}`)
+        }}
+        onEditClick={(id) => setRedirect(`/trades/${id}/edit`)}
       />
     </>
   )

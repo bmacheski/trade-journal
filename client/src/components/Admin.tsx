@@ -1,5 +1,5 @@
 import React from 'react'
-import { getSetups } from '../api/setups'
+import { getSetups, deleteSetup, createSetup, updateSetup } from '../api/setups'
 import MaterialTable from 'material-table'
 import { Grid, Card, CardContent, Typography } from '@material-ui/core'
 import { getPairs } from '../api/pairs'
@@ -28,18 +28,25 @@ function Admin() {
   return (
     <>
       <Typography variant="h6" noWrap>
-        Trade Journal
+        Admin
       </Typography>
       <Grid container spacing={4}>
-        <Grid item md={6} xs={6}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
-                title="Setups"
-                columns={[{ title: 'Name', field: 'name' }]}
-                data={setups}
+                title="Pairs"
+                columns={[
+                  {
+                    title: 'Name',
+                    field: 'name',
+                  },
+                  { title: 'Base Pair', field: 'base_pair' },
+                ]}
+                data={pairs}
                 options={{
                   selection: true,
+                  search: false,
                 }}
                 editable={{
                   onRowAdd: (newData) =>
@@ -82,52 +89,25 @@ function Admin() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={6} xs={6}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
-                title="Pairs"
+                title="Setups"
                 columns={[{ title: 'Name', field: 'name' }]}
-                data={pairs}
+                data={setups}
                 options={{
                   selection: true,
+                  search: false,
                 }}
                 editable={{
-                  onRowAdd: (newData) =>
-                    new Promise((resolve, reject) => {
-                      setTimeout(() => {
-                        {
-                          /* const data = this.state.data;
-                            data.push(newData);
-                            this.setState({ data }, () => resolve()); */
-                        }
-                        resolve()
-                      }, 1000)
-                    }),
+                  onRowAdd: (newData) => createSetup(newData).then(loadSetups),
                   onRowUpdate: (newData, oldData) =>
-                    new Promise((resolve, reject) => {
-                      setTimeout(() => {
-                        {
-                          /* const data = this.state.data;
-                              const index = data.indexOf(oldData);
-                              data[index] = newData;                
-                              this.setState({ data }, () => resolve()); */
-                        }
-                        resolve()
-                      }, 1000)
-                    }),
+                    updateSetup(newData.id, {
+                      name: newData.name,
+                    }).then(loadSetups),
                   onRowDelete: (oldData) =>
-                    new Promise((resolve, reject) => {
-                      setTimeout(() => {
-                        {
-                          /* let data = this.state.data;
-                              const index = data.indexOf(oldData);
-                              data.splice(index, 1);
-                              this.setState({ data }, () => resolve()); */
-                        }
-                        resolve()
-                      }, 1000)
-                    }),
+                    deleteSetup(oldData.id).then(loadSetups),
                 }}
               />
             </CardContent>

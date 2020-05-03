@@ -49,8 +49,8 @@ function TradeDetail() {
       .finally(() => setLoading(false))
   }, [])
 
-  function onDeleteSucces(): void {
-    setRedirect(ROUTES.TRADE_LIST)
+  function onEditClick(id): void {
+    setRedirect(`/trades/${id}/edit`)
   }
 
   if (redirect) return <Redirect to={redirect} />
@@ -62,12 +62,7 @@ function TradeDetail() {
           <div key={trade.id}>
             <Card className={classes.card}>
               <CardHeader title="Trade Details"></CardHeader>
-              <TradeTable
-                loading={loading}
-                trades={trades}
-                showPagination={false}
-                onDeleteSuccess={onDeleteSucces}
-              />
+              <TradeTable trades={trades} onEditClick={onEditClick} />
             </Card>
             {trade.image_url && (
               <Card className={classes.card}>
@@ -81,7 +76,7 @@ function TradeDetail() {
                   <img
                     alt=""
                     className={classes.screenshot}
-                    onError={(err) => setLoadImageError(true)}
+                    onError={() => setLoadImageError(true)}
                     src={trade.image_url}
                   />
                 )}

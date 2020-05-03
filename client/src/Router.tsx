@@ -17,7 +17,7 @@ const ROUTES = {
   TRADE_DETAIL: createRoute('trades', ':id'),
   TREADE_CREATE: createRoute('trades', 'new'),
   TRADE_EDIT: createRoute('trades', ':id', 'edit'),
-  ADMIN: createRoute('', 'admin'),
+  ADMIN: createRoute('admin'),
 }
 
 function Router() {
