@@ -8,9 +8,11 @@ export function getTrade(id: number | null = null) {
   return fetch(url).then(extractData)
 }
 
-export function getTrades(page) {
+export function getTrades(page: number, sort: string, direction: string) {
   let url = TRADES_URL
   if (page) url += `?page=${page}`
+  if (sort) url += `&sort=${sort}`
+  if (direction) url += `&direction=${direction}`
   return fetch(url).then(extractData)
 }
 

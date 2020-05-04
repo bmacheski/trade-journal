@@ -23,25 +23,4 @@ class TradeSerializer < ActiveModel::Serializer
       }
     end
   end
-
-  def risk_multiple
-    return nil if required_values_missing(object.exit_price)
-
-    (object.exit_price - object.entry_price) / (object.entry_price - object.stop_loss)
-  end
-
-  def risk_reward_ratio
-    return nil if required_values_missing
-
-    potential_risk = (object.entry_price - object.stop_loss).abs
-    potential_reward = (object.entry_price - object.take_profit).abs
-    potential_reward / potential_risk
-  end
-
-  private
-
-  def required_values_missing(*additional_values)
-    fields = [object.entry_price, object.stop_loss, object.take_profit] + additional_values
-    fields.any?(&:nil?)
-  end
 end

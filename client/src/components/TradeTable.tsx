@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 interface TradeTableProps {
-  trades: any[]
+  trades: any
   onDeleteSuccess?: () => void
   onEditClick: (id) => void
   onRowClick?: (a, b) => void

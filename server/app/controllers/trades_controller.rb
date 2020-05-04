@@ -4,7 +4,8 @@ class TradesController < ApplicationController
   def index
     page = params[:page] || 1
     sort = params[:sort] || :created_at
-    @trades = Trade.order(sort).page(page).per(20)
+    direction = params[:direction] || :asc
+    @trades = Trade.order("#{sort} #{direction}").page(page).per(20)
     render json: @trades, status: :ok
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_03_192915) do
+ActiveRecord::Schema.define(version: 2020_05_04_024955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(version: 2020_05_03_192915) do
     t.decimal "stop_loss"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "risk_reward_ratio"
+    t.decimal "risk_multiple"
     t.index ["pair_id"], name: "index_trades_on_pair_id"
   end
 
