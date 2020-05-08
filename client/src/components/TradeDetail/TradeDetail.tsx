@@ -1,36 +1,10 @@
 import React from 'react'
 import { useParams, Redirect } from 'react-router-dom'
-import TradeTable from './TradeTable'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core'
-import { ROUTES } from '../Router'
+import TradeTable from '../TradeTable/TradeTable'
+import { Card, CardContent, CardHeader } from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
-import { getTrade } from '../api/trades'
-
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    card: {
-      marginTop: 10,
-    },
-    screenshot: {
-      maxHeight: '70vh',
-    },
-    message: {
-      padding: theme.spacing(2),
-    },
-    messageContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      margin: theme.spacing(1),
-    },
-  })
-})
+import { getTrade } from '../../api/trades'
+import useStyles from './TradeDetail.styles'
 
 function TradeDetail() {
   const classes = useStyles()

@@ -1,33 +1,8 @@
 import React from 'react'
-import {
-  Card,
-  CardContent,
-  Grid,
-  CardHeader,
-  makeStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core'
-import WinPercentage from './WinPercentage'
-import { getMetrics } from '../api/metrics'
-
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    card: {
-      minHeight: 100,
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-      fontSize: 20,
-    },
-    long: {
-      color: 'green',
-    },
-    short: {
-      color: 'red',
-    },
-  })
-})
+import { Card, CardContent, Grid, CardHeader } from '@material-ui/core'
+import WinPercentage from '../WinPercentage/WinPercentage'
+import { getMetrics } from '../../api/metrics'
+import useStyles from './Dashboard.styles'
 
 function Dashboard() {
   const classes = useStyles()

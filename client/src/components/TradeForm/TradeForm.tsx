@@ -10,13 +10,13 @@ import {
   Chip,
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
-import { ROUTES } from '../Router'
-import * as dateFormatter from '../utils/date'
+import { ROUTES } from '../../Router'
+import * as dateFormatter from '../../utils/date'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
-import { getTrade, updateTrade, createTrade } from '../api/trades'
-import { getPairs } from '../api/pairs'
-import { getSetups } from '../api/setups'
+import { getTrade, updateTrade, createTrade } from '../../api/trades'
+import { getPairs } from '../../api/pairs'
+import { getSetups } from '../../api/setups'
 import { DateTimePicker } from '@material-ui/pickers'
 
 function parseDateFields(values: any) {
@@ -45,7 +45,6 @@ function TradeForm() {
 
   const inputProps = {
     fullWidth: true,
-
     margin: 'dense' as any,
     InputLabelProps: {
       shrink: true,
@@ -105,9 +104,7 @@ function TradeForm() {
       <Formik
         enableReinitialize={true}
         initialValues={trade || {}}
-        onSubmit={(values) => {
-          onSubmit(values)
-        }}
+        onSubmit={onSubmit}
       >
         {(props) => {
           return (
@@ -261,7 +258,7 @@ function TradeForm() {
                       props.setFieldValue('trade_setups', onSetupChange(val))
                     }
                     getOptionSelected={(option, value = []) =>
-                      value.id == option.id
+                      value.id === option.id
                     }
                     renderInput={(params) => (
                       <TextField {...params} label="Setup" {...inputProps} />

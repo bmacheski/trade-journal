@@ -1,11 +1,11 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import MetricsDashboard from './components/Dashboard'
-import TradeList from './components/TradeList'
-import TradeForm from './components/TradeForm'
-import TradeDetail from './components/TradeDetail'
-import Layout from './components/Layout'
-import Admin from './components/Admin'
+import MetricsDashboard from './components/Dashboard/Dashboard'
+import TradeList from './components/TradeList/TradeList'
+import TradeForm from './components/TradeForm/TradeForm'
+import TradeDetail from './components/TradeDetail/TradeDetail'
+import Layout from './components/Layout/Layout'
+import Admin from './components/Admin/Admin'
 
 function createRoute(base, ...paths: string[]): string {
   return [base ? '/' + base : '', ...paths].join('/')

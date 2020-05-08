@@ -1,8 +1,13 @@
 import React from 'react'
-import { getSetups, deleteSetup, createSetup, updateSetup } from '../api/setups'
+import {
+  getSetups,
+  deleteSetup,
+  createSetup,
+  updateSetup,
+} from '../../api/setups'
 import MaterialTable from 'material-table'
 import { Grid, Card, CardContent, Typography } from '@material-ui/core'
-import { getPairs } from '../api/pairs'
+import { getPairs } from '../../api/pairs'
 
 function Admin() {
   const [setups, setSetups] = React.useState<any[]>([])
