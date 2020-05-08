@@ -22,11 +22,11 @@ function TradeList() {
           return new Promise((resolve, reject) => {
             const page = query.page + 1
             const orderBy = query.orderBy?.field
-            getTrades(page, orderBy, query.orderDirection).then((res) => {
+            getTrades(page, orderBy, query.orderDirection, 20).then((res) => {
               resolve({
-                data: res,
-                page: 1,
-                totalCount: 6,
+                data: res.data,
+                page: res.meta.page - 1,
+                totalCount: res.meta.total_count,
               })
             })
           })

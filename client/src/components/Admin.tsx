@@ -27,7 +27,7 @@ function Admin() {
 
   return (
     <>
-      <Typography variant="h6" noWrap>
+      <Typography variant="h5" noWrap>
         Admin
       </Typography>
       <Grid container spacing={4}>
@@ -41,7 +41,6 @@ function Admin() {
                     title: 'Name',
                     field: 'name',
                   },
-                  { title: 'Base Pair', field: 'base_pair' },
                 ]}
                 data={pairs}
                 options={{

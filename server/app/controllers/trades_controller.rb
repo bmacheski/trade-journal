@@ -5,8 +5,11 @@ class TradesController < ApplicationController
     page = params[:page] || 1
     sort = params[:sort] || :created_at
     direction = params[:direction] || :asc
-    @trades = Trade.order("#{sort} #{direction}").page(page).per(20)
-    render json: @trades, status: :ok
+    per_page = params[:count_per_page] || 20
+    @trades = Trade.order("#{sort} #{direction}").page(page).per(per_page)
+    render json: { data: ActiveModel::Serializer::CollectionSerializer.new(
+      @trades, each_serializer: TradeSerializer
+    ), meta: { page_count: @trades.total_pages, page: page.to_i, total_count: Trade.count } }
   end
 
   def create

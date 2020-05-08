@@ -1,5 +1,6 @@
 import { API_URL } from '../constants/url'
 import { extractData } from './common'
+import queryString from 'query-string'
 
 const TRADES_URL = `${API_URL}/trades`
 
@@ -8,11 +9,18 @@ export function getTrade(id: number | null = null) {
   return fetch(url).then(extractData)
 }
 
-export function getTrades(page: number, sort: string, direction: string) {
-  let url = TRADES_URL
-  if (page) url += `?page=${page}`
-  if (sort) url += `&sort=${sort}`
-  if (direction) url += `&direction=${direction}`
+export function getTrades(
+  page: number,
+  sort: string | null,
+  direction: 'asc' | 'desc' | 'none',
+  countPerPage: number,
+) {
+  const url = `${TRADES_URL}?${queryString.stringify({
+    page,
+    sort,
+    direction: direction === 'none' ? null : direction,
+    count_per_page: countPerPage,
+  })}`
   return fetch(url).then(extractData)
 }
 

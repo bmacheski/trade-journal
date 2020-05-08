@@ -37,7 +37,6 @@ function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
     series: [],
     options: {
       chart: {
-        height: 350,
         type: 'radialBar',
       },
       plotOptions: {
@@ -77,13 +76,12 @@ function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
   return (
     <Card>
       <CardContent>
-        <div>
-          <ReactApexChart
-            options={config}
-            series={config.series}
-            type="radialBar"
-          />
-        </div>
+        <ReactApexChart
+          options={config}
+          height={350}
+          series={config.series}
+          type="radialBar"
+        />
         <div className={classes.stats}>
           {stats.map((device) => (
             <div className={classes.device} key={device.title}>

@@ -15,7 +15,6 @@ import { useTheme, Divider } from '@material-ui/core'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
-import SettingsIcon from '@material-ui/icons/Settings'
 
 interface SidebarProps {
   open: boolean

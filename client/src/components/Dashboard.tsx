@@ -40,12 +40,12 @@ function Dashboard() {
 
   return (
     <Grid container spacing={4}>
-      <Grid item lg={6} sm={6} xl={4} xs={12}>
+      <Grid item lg={4} sm={12} md={4} xl={4} xs={12}>
         <Card className={classes.card}>
           <CardContent>Total Trade Count: {metrics.total_count}</CardContent>
         </Card>
       </Grid>
-      <Grid item lg={6} sm={6} xl={4} xs={12}>
+      <Grid item lg={4} sm={12} md={4} xl={4} xs={12}>
         <Card className={classes.card}>
           <CardContent>
             <div className={classes.long}> Longs: {metrics.long_count}</div>
@@ -53,7 +53,7 @@ function Dashboard() {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item lg={6} sm={6} xl={4} xs={12}>
+      <Grid item lg={4} sm={12} md={4} xl={4} xs={12}>
         <Card className={classes.card}>
           <CardContent>
             <div className={classes.short}> Shorts: {metrics.short_count}</div>
