@@ -45,7 +45,7 @@ function TradeDetail() {
             <Card className={classes.card}>
               <CardHeader title="Trade Details"></CardHeader>
               <TradeTable
-                title="Trade Details"
+                title=""
                 trades={trades}
                 onEditClick={onEditClick}
                 isDetailView={true}

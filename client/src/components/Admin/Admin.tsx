@@ -8,26 +8,29 @@ import {
 import MaterialTable from 'material-table'
 import { Grid, Card, CardContent, Typography } from '@material-ui/core'
 import { getPairs } from '../../api/pairs'
+import { getPlatforms } from '../../api/platform'
 
 function Admin() {
   const [setups, setSetups] = React.useState<any[]>([])
   const [pairs, setPairs] = React.useState<any[]>([])
+  const [platforms, setPlatforms] = React.useState<any[]>([])
 
   function loadSetups() {
-    getSetups().then((res) => {
-      setSetups(res)
-    })
+    getSetups().then((res) => setSetups(res))
   }
 
   function loadPairs() {
-    getPairs().then((res) => {
-      setPairs(res)
-    })
+    getPairs().then((res) => setPairs(res))
+  }
+
+  function loadExchanges() {
+    getPlatforms().then((res) => setPlatforms(res))
   }
 
   React.useEffect(() => {
     loadSetups()
     loadPairs()
+    loadExchanges()
   }, [])
 
   return (
@@ -36,7 +39,7 @@ function Admin() {
         Admin
       </Typography>
       <Grid container spacing={4}>
-        <Grid item md={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
@@ -93,13 +96,37 @@ function Admin() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
                 title="Setups"
                 columns={[{ title: 'Name', field: 'name' }]}
                 data={setups}
+                options={{
+                  selection: true,
+                  search: false,
+                }}
+                editable={{
+                  onRowAdd: (newData) => createSetup(newData).then(loadSetups),
+                  onRowUpdate: (newData, oldData) =>
+                    updateSetup(newData.id, {
+                      name: newData.name,
+                    }).then(loadSetups),
+                  onRowDelete: (oldData) =>
+                    deleteSetup(oldData.id).then(loadSetups),
+                }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <Card>
+            <CardContent>
+              <MaterialTable
+                title="Exchanges"
+                columns={[{ title: 'Name', field: 'name' }]}
+                data={platforms}
                 options={{
                   selection: true,
                   search: false,

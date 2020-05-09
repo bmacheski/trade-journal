@@ -32,7 +32,7 @@ function TradeList() {
         </Button>
       </Link>
       <TradeTable
-        title="Trade List"
+        title="Trades"
         trades={buildTableTrades}
         onRowClick={(_, row) => setRedirect(`/trades/${row.id}`)}
         onEditClick={(id) => setRedirect(`/trades/${id}/edit`)}

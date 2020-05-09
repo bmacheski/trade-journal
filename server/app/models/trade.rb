@@ -1,9 +1,10 @@
 class Trade < ApplicationRecord
   belongs_to :pair
+  belongs_to :platform
   has_many :trade_setups
   has_many :setups, through: :trade_setups
 
-  before_save :set_risk_reward_ratio, :set_risk_multiple
+  before_save :set_risk_reward_ratio, :set_risk_multiple, :set_is_win
 
   def self.metrics
     query = <<~SQL
@@ -82,5 +83,10 @@ class Trade < ApplicationRecord
   def required_values_missing?(*additional_values)
     fields = [entry_price, stop_loss, take_profit] + additional_values
     fields.any?(&:nil?)
+  end
+
+  def set_is_win
+    self.is_win = action == 'sell' && entry_price > exit_price ||
+                  action == 'buy' && entry_price < exit_price
   end
 end

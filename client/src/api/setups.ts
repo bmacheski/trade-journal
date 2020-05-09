@@ -1,6 +1,12 @@
 import { API_URL } from '../constants/url'
 import { extractData } from './common'
 
+export interface Setup {
+  id: number
+  name: string
+  setup_id?: number
+}
+
 export function getSetups() {
   let url = `${API_URL}/setups`
   return fetch(url).then(extractData)

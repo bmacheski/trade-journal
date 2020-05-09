@@ -15,6 +15,7 @@ class TradesController < ApplicationController
   def create
     @trade = Trade.new trade_params.except(:pair)
     set_pair
+    set_platform
 
     if @trade.save
       render json: @trade, status: :ok
@@ -31,6 +32,8 @@ class TradesController < ApplicationController
     @trade = Trade.find params[:id]
     set_pair
     set_setups
+    set_platform
+
     @trade.assign_attributes trade_params.except(:pair, :trade_setups)
 
     if @trade.save
@@ -57,10 +60,26 @@ class TradesController < ApplicationController
 
   private
 
+  def trade_params
+    params.require(:trade).permit(:entry_date, :exit_date, :name, :notes,
+                                  :quantity, :entry_price, :exit_price, :action,
+                                  :original_take_profit_hit, :risk_reward,
+                                  :fees, :target, :stop_loss, :image_url, :take_profit,
+                                  pair: %i[id name],
+                                  platform: %i[id name],
+                                  trade_setups: %i[id setup_id])
+  end
+
   def set_pair
     return if trade_params[:pair].nil?
 
     @trade.pair = Pair.find trade_params[:pair][:id]
+  end
+
+  def set_platform
+    return if trade_params[:platform].nil?
+
+    @trade.platform = Platform.find trade_params[:platform][:id]
   end
 
   def set_setups
@@ -76,15 +95,6 @@ class TradesController < ApplicationController
         trade_setup.save!
       end
     end
-  end
-
-  def trade_params
-    params.require(:trade).permit(:entry_date, :exit_date, :name, :notes, :take_profit,
-                                  :quantity, :entry_price, :exit_price, :action,
-                                  :original_take_profit_hit, :risk_reward, :image_url,
-                                  :fees, :target, :stop_loss,
-                                  pair: %i[id name created_at updated_at],
-                                  trade_setups: %i[id created_at updated_at setup_id])
   end
 
   def set_trade

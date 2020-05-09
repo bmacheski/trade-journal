@@ -10,12 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_210324) do
+ActiveRecord::Schema.define(version: 2020_05_09_193249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "pairs", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "platforms", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -55,7 +61,10 @@ ActiveRecord::Schema.define(version: 2020_05_08_210324) do
     t.decimal "risk_reward_ratio"
     t.decimal "risk_multiple"
     t.boolean "original_take_profit_hit", default: false
+    t.boolean "is_win", default: false
+    t.bigint "platform_id"
     t.index ["pair_id"], name: "index_trades_on_pair_id"
+    t.index ["platform_id"], name: "index_trades_on_platform_id"
   end
 
 end

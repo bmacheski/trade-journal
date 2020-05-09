@@ -8,6 +8,7 @@ import {
   Select,
   MenuItem,
   Chip,
+  CircularProgress,
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
 import { ROUTES } from '../../Router'
@@ -16,8 +17,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
 import { getTrade, updateTrade, createTrade } from '../../api/trades'
 import { getPairs } from '../../api/pairs'
-import { getSetups } from '../../api/setups'
+import { getSetups, Setup } from '../../api/setups'
 import { DateTimePicker } from '@material-ui/pickers'
+import { getPlatforms } from '../../api/platform'
 
 function parseDateFields(values: any) {
   const { entry_date, exit_date } = values
@@ -36,12 +38,12 @@ interface SymbolOptionType {
 function TradeForm() {
   const { id = 'new' }: any = useParams()
   const isNewTrade = id === 'new'
-
+  const [loading, setLoading] = React.useState<boolean>(false)
   const [redirect, setRedirect] = React.useState<string>('')
-
   const [trade, setTrade] = React.useState<any>(null)
   const [pairs, setPairs] = React.useState<any[]>([])
   const [setups, setSetups] = React.useState<any[]>([])
+  const [platforms, setPlatforms] = React.useState<any[]>([])
 
   const inputProps = {
     fullWidth: true,
@@ -52,35 +54,44 @@ function TradeForm() {
   }
 
   React.useEffect(() => {
-    getPairs().then((res) => setPairs(res))
-    getSetups().then((res) => setSetups(res))
-    if (id === 'new') return
-    getTrade(id).then((res) => setTrade(res))
+    async function initialize() {
+      const promises = [
+        getPairs().then((res) => setPairs(res)),
+        getSetups().then((res) => setSetups(res)),
+        getPlatforms().then((res) => setPlatforms(res)),
+      ]
+      if (id != 'new') promises.push(getTrade(id).then((res) => setTrade(res)))
+      setLoading(true)
+      await Promise.all(promises)
+      setLoading(false)
+    }
+    initialize()
   }, [])
 
   async function onSubmit(form: any) {
     const formData = parseDateFields(form)
 
     if (id === 'new') {
-      await createTrade(formData).then((res) => {})
+      await createTrade(formData)
     } else {
       await updateTrade(id, formData)
     }
     setRedirect(ROUTES.TRADE_LIST)
   }
 
-  function onSetupChange(val) {
-    return val.map((x) => {
-      if (!x.setup_id) {
-        return Object.assign({}, x, {
-          setup_id: x.id,
+  function onSetupChange(setups: Setup[]) {
+    return setups.map((setup) => {
+      if (!setup.setup_id) {
+        return Object.assign({}, setup, {
+          setup_id: setup.id,
         })
       }
-      return x
+      return setup
     })
   }
 
   if (redirect) return <Redirect to={redirect} />
+  if (loading) return <CircularProgress />
 
   return (
     <div>
@@ -245,6 +256,18 @@ function TradeForm() {
                     value={props.values?.fees}
                     onChange={props.handleChange}
                     {...inputProps}
+                  />
+                </Grid>
+                <Grid item lg={3} md={3} xs={12}>
+                  <Autocomplete
+                    id="symbol-autocomplete"
+                    options={platforms}
+                    value={props.values?.platform || null}
+                    getOptionLabel={(option: SymbolOptionType) => option.name}
+                    onChange={(_, val) => props.setFieldValue('platform', val)}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Exchange" {...inputProps} />
+                    )}
                   />
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>

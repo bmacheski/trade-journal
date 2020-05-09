@@ -30,6 +30,31 @@ function TradeTable({
       title: 'Pair',
     },
     {
+      title: 'Status',
+      render: (row) => {
+        const isOpen = !row.exit_date
+        return (
+          <Chip
+            size="small"
+            label={isOpen ? 'Open' : 'Closed'}
+            className={isOpen ? classes.buyBadge : classes.sellBadge}
+          />
+        )
+      },
+    },
+    {
+      field: 'is_win',
+      title: 'Win',
+      render: (row) =>
+        row.exit_date ? (
+          row.is_win ? (
+            <CheckCircleIcon style={{ color: '#1bc943' }} />
+          ) : (
+            <HighlightOffIcon style={{ color: '#f83245' }} />
+          )
+        ) : null,
+    },
+    {
       title: 'Side',
       field: 'action',
       render: (row) => {
@@ -39,19 +64,6 @@ function TradeTable({
             size="small"
             label={isBuy ? 'Long' : 'Short'}
             className={isBuy ? classes.buyBadge : classes.sellBadge}
-          />
-        )
-      },
-    },
-    {
-      title: 'Status',
-      render: (row) => {
-        const isOpen = !row.exit_date
-        return (
-          <Chip
-            size="small"
-            label={isOpen ? 'Open' : 'Closed'}
-            className={isOpen ? classes.buyBadge : classes.sellBadge}
           />
         )
       },
@@ -89,14 +101,6 @@ function TradeTable({
       title: 'Take Profit',
     },
     {
-      field: 'stop_loss',
-      title: 'Stop Loss',
-    },
-    {
-      field: 'fees',
-      title: 'Fees',
-    },
-    {
       field: 'original_take_profit_hit',
       title: 'TP Hit',
       render: (row) =>
@@ -107,6 +111,14 @@ function TradeTable({
             <HighlightOffIcon style={{ color: '#f83245' }} />
           )
         ) : null,
+    },
+    {
+      field: 'stop_loss',
+      title: 'Stop Loss',
+    },
+    {
+      field: 'fees',
+      title: 'Fees',
     },
   ]
 
