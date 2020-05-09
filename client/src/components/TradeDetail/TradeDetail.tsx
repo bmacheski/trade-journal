@@ -1,7 +1,14 @@
 import React from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import TradeTable from '../TradeTable/TradeTable'
-import { Card, CardContent, CardHeader, Chip } from '@material-ui/core'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
 import { getTrade } from '../../api/trades'
 import useStyles from './TradeDetail.styles'
@@ -26,6 +33,8 @@ function TradeDetail() {
     setRedirect(`/trades/${id}/edit`)
   }
 
+  if (loading) return <CircularProgress />
+
   if (redirect) return <Redirect to={redirect} />
 
   return (
@@ -48,7 +57,9 @@ function TradeDetail() {
                 {loadImageError ? (
                   <div className={classes.messageContainer}>
                     <ErrorIcon />
-                    <span className={classes.message}>Error loading image</span>
+                    <Typography variant="h6" className={classes.message}>
+                      Error loading image
+                    </Typography>
                   </div>
                 ) : (
                   <img
@@ -66,7 +77,7 @@ function TradeDetail() {
                 <Card>
                   <CardContent>
                     {trade.trade_setups.map(({ id, name }) => (
-                      <Chip key={id} label={name} />
+                      <Chip className={classes.chip} key={id} label={name} />
                     ))}
                   </CardContent>
                 </Card>

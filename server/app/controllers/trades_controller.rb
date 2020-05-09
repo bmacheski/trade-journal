@@ -81,7 +81,8 @@ class TradesController < ApplicationController
   def trade_params
     params.require(:trade).permit(:entry_date, :exit_date, :name, :notes, :take_profit,
                                   :quantity, :entry_price, :exit_price, :action,
-                                  :risk_reward, :image_url, :fees, :target, :stop_loss,
+                                  :original_take_profit_hit, :risk_reward, :image_url,
+                                  :fees, :target, :stop_loss,
                                   pair: %i[id name created_at updated_at],
                                   trade_setups: %i[id created_at updated_at setup_id])
   end

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, Grid, CardHeader } from '@material-ui/core'
 import WinPercentage from '../WinPercentage/WinPercentage'
-import { getMetrics, getSetupMetrics } from '../../api/metrics'
+import { getMetrics } from '../../api/metrics'
 import useStyles from './Dashboard.styles'
 import SetupReport from '../SetupReport/SetupReport'
 

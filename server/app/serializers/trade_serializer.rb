@@ -2,11 +2,7 @@ class TradeSerializer < ActiveModel::Serializer
   attributes :id, :action, :pair, :quantity, :entry_date, :exit_date,
              :entry_price, :exit_price, :notes, :image_url, :trade_setups,
              :stop_loss, :take_profit, :fees, :risk_reward_ratio, :risk_multiple,
-             :original_tp_hit
-
-  def original_tp_hit
-    object.original_take_profit_hit
-  end
+             :original_take_profit_hit
 
   def pair
     return if object.pair.nil?

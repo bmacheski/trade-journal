@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: 'center',
       margin: theme.spacing(1),
     },
+    chip: {
+      margin: theme.spacing(0.5),
+    },
   })
 })
 

@@ -227,12 +227,14 @@ function TradeForm() {
                     <Select
                       labelId="tp-hit-select-label"
                       id="tp-hit-select"
-                      name="take_profit_hit"
-                      value={props.values?.original_tp_hit || false}
+                      name="original_take_profit_hit"
+                      value={(
+                        props.values?.original_take_profit_hit || 'false'
+                      ).toString()}
                       onChange={props.handleChange}
                     >
-                      <MenuItem value="yes">Yes</MenuItem>
-                      <MenuItem value="no">No</MenuItem>
+                      <MenuItem value="true">Yes</MenuItem>
+                      <MenuItem value="false">No</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

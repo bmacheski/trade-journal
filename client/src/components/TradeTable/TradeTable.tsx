@@ -4,7 +4,7 @@ import * as dateFormatter from '../../utils/date'
 import * as dollarFormatter from '../../utils/dollar'
 import MaterialTable from 'material-table'
 import useStyles from './TradeTable.styles'
-import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 
 interface TradeTableProps {
@@ -101,10 +101,10 @@ function TradeTable({
       title: 'TP Hit',
       render: (row) =>
         row.exit_date ? (
-          row.original_tp_hit ? (
-            <CheckCircleIcon />
+          row.original_take_profit_hit ? (
+            <CheckCircleIcon style={{ color: '#1bc943' }} />
           ) : (
-            <HighlightOffIcon />
+            <HighlightOffIcon style={{ color: '#f83245' }} />
           )
         ) : null,
     },
