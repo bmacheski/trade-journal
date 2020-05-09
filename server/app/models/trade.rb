@@ -6,7 +6,7 @@ class Trade < ApplicationRecord
   before_save :set_risk_reward_ratio, :set_risk_multiple
 
   def self.metrics
-    query = <<-SQL
+    query = <<~SQL
       select count(case when action = 'buy' then 1 else null end) long_count
         ,count(
           case when action = 'buy' and entry_price < exit_price then 1
@@ -31,8 +31,34 @@ class Trade < ApplicationRecord
           when action = 'sell' and entry_price < exit_price then 1
           else null
           end
-        ) loss_count
+        ) loss_count,
+        avg(risk_reward_ratio) risk_reward_ratio_avg,
+        avg(risk_multiple) risk_multiple_avg 
       from trades;
+    SQL
+    ActiveRecord::Base.connection.execute(query)
+  end
+
+  def self.setup_metrics
+    query = <<~SQL
+      select name
+      , count(
+        case 
+        when action = 'buy' and entry_price < exit_price then 1
+        when action = 'sell' and entry_price > exit_price then 1
+        else null
+        end
+      ) win_count
+      ,count(
+        case when action = 'buy' and entry_price > exit_price then 1
+        when action = 'sell' and entry_price < exit_price then 1
+        else null
+        end
+      ) loss_count
+      from trade_setups 
+      join trades on trades.id = trade_setups.trade_id
+      join setups on setups.id = trade_setups.setup_id
+      group by name
     SQL
     ActiveRecord::Base.connection.execute(query)
   end

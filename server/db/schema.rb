@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_024955) do
+ActiveRecord::Schema.define(version: 2020_05_08_210324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2020_05_04_024955) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "risk_reward_ratio"
     t.decimal "risk_multiple"
+    t.boolean "original_take_profit_hit", default: false
     t.index ["pair_id"], name: "index_trades_on_pair_id"
   end
 

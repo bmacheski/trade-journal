@@ -11,7 +11,7 @@ import useStyles from './Layout.styles'
 const drawerWidth = 240
 
 interface LayoutWrapperProps {
-  children: JSX.Element
+  children: React.ReactNode
 }
 
 function LayoutWrapper({ children }: LayoutWrapperProps) {

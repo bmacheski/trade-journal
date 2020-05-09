@@ -7,6 +7,9 @@ const theme = createMuiTheme({
     appBar: 1200,
     drawer: 1100,
   },
+  typography: {
+    fontFamily: 'Nunito',
+  },
 })
 
 export default theme

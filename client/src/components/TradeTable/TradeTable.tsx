@@ -1,21 +1,29 @@
 import { Chip } from '@material-ui/core'
-
 import React from 'react'
 import * as dateFormatter from '../../utils/date'
 import * as dollarFormatter from '../../utils/dollar'
 import MaterialTable from 'material-table'
 import useStyles from './TradeTable.styles'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 
 interface TradeTableProps {
   trades: any
   onDeleteSuccess?: () => void
   onEditClick: (id) => void
   onRowClick?: (a, b) => void
+  title: string
+  isDetailView?: boolean
 }
 
-function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
+function TradeTable({
+  trades,
+  onEditClick,
+  onRowClick,
+  title,
+  isDetailView = false,
+}: TradeTableProps) {
   const classes = useStyles()
-
   const columns = [
     {
       field: 'pair.name',
@@ -28,6 +36,7 @@ function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
         const isBuy = row.action === 'buy'
         return (
           <Chip
+            size="small"
             label={isBuy ? 'Long' : 'Short'}
             className={isBuy ? classes.buyBadge : classes.sellBadge}
           />
@@ -40,6 +49,7 @@ function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
         const isOpen = !row.exit_date
         return (
           <Chip
+            size="small"
             label={isOpen ? 'Open' : 'Closed'}
             className={isOpen ? classes.buyBadge : classes.sellBadge}
           />
@@ -51,34 +61,52 @@ function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
       title: 'Quantity',
     },
     {
-      field: 'entry_date',
       title: 'Entry Date',
-      render: (val) => dateFormatter.toShortDate(val.entry_date),
+      render: (row) => dateFormatter.toShortDate(row.entry_date),
     },
     {
-      field: 'exit_date',
       title: 'Exit Date',
-      render: (val) => dateFormatter.toShortDate(val.exit_date),
+      render: (row) => dateFormatter.toShortDate(row.exit_date),
     },
     {
-      field: 'entry_price',
-      title: 'Entry price',
-      render: (val) => dollarFormatter.format(val.entry_price),
+      title: 'Entry Price',
+      render: (row) => dollarFormatter.format(row.entry_price),
     },
     {
-      field: 'exit_price',
-      title: 'Exit price',
-      render: (val) => dollarFormatter.format(val.exit_price),
+      title: 'Exit Price',
+      render: (row) => dollarFormatter.format(row.exit_price),
     },
     {
-      field: 'risk_reward_ratio',
       title: 'RRR Planned',
-      render: (val) => Number(val.risk_reward_ratio).toFixed(2),
+      render: (row) => Number(row.risk_reward_ratio).toFixed(2),
     },
     {
-      field: 'risk_multiple',
       title: 'R-Multiple',
-      render: (val) => Number(val.risk_multiple).toFixed(1),
+      render: (row) => Number(row.risk_multiple).toFixed(1),
+    },
+    {
+      field: 'take_profit',
+      title: 'Take Profit',
+    },
+    {
+      field: 'stop_loss',
+      title: 'Stop Loss',
+    },
+    {
+      field: 'fees',
+      title: 'Fees',
+    },
+    {
+      field: 'original_take_profit_hit',
+      title: 'TP Hit',
+      render: (row) =>
+        row.exit_date ? (
+          row.original_tp_hit ? (
+            <CheckCircleIcon />
+          ) : (
+            <HighlightOffIcon />
+          )
+        ) : null,
     },
   ]
 
@@ -89,11 +117,13 @@ function TradeTable({ trades, onEditClick, onRowClick }: TradeTableProps) {
       <MaterialTable
         columns={columns}
         data={trades}
-        title="Trades"
+        title={title}
         onRowClick={onRowClick}
         options={{
           actionsColumnIndex: -1,
           search: false,
+          maxBodyHeight: isDetailView ? 200 : 1000,
+          emptyRowsWhenPaging: !isDetailView,
         }}
         actions={[
           {

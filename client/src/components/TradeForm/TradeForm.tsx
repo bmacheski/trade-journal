@@ -85,7 +85,6 @@ function TradeForm() {
   return (
     <div>
       <h1>{isNewTrade ? 'Add' : 'Edit'} Trade</h1>
-
       <div>
         {trade?.risk_multiple && (
           <Chip
@@ -167,7 +166,6 @@ function TradeForm() {
                     {...inputProps}
                   />
                 </Grid>
-
                 <Grid item lg={3} md={3} xs={12}>
                   <TextField
                     label="Entry Price"
@@ -224,13 +222,13 @@ function TradeForm() {
                 <Grid item lg={3} md={3} xs={12}>
                   <FormControl {...inputProps}>
                     <InputLabel shrink id="action-select-label">
-                      Original Take Profit Hit
+                      Original TP Hit
                     </InputLabel>
                     <Select
                       labelId="tp-hit-select-label"
                       id="tp-hit-select"
                       name="take_profit_hit"
-                      value={props.values?.take_profit_hit || false}
+                      value={props.values?.original_tp_hit || false}
                       onChange={props.handleChange}
                     >
                       <MenuItem value="yes">Yes</MenuItem>

@@ -50,6 +50,11 @@ class TradesController < ApplicationController
     render json: metrics.first, status: :ok
   end
 
+  def setup_metrics
+    setup_metrics = Trade.setup_metrics
+    render json: setup_metrics, status: :ok
+  end
+
   private
 
   def set_pair

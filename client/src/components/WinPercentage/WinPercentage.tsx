@@ -5,12 +5,16 @@ import useStyles from './WinPercentage.styles'
 
 interface WinPercentageProps {
   winCount: number
+  lossCount: number
   totalCount: number
 }
 
-function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
+function WinPercentage({
+  winCount,
+  lossCount,
+  totalCount,
+}: WinPercentageProps) {
   const classes = useStyles()
-
   const [config, setConfig] = React.useState({
     labels: ['Win Rate'],
     series: [],
@@ -30,24 +34,25 @@ function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
 
   React.useEffect(() => {
     if (winCount && totalCount) {
-      const data = {
-        series: [
-          totalCount > 0 ? ((winCount / totalCount) * 100).toFixed(2) : 0,
-        ],
-      }
-      setConfig(Object.assign({}, config, data))
+      setConfig(
+        Object.assign({}, config, {
+          series: [
+            totalCount > 0 ? ((winCount / totalCount) * 100).toFixed(2) : 0,
+          ],
+        }),
+      )
     }
   }, [winCount, totalCount])
 
   const stats = [
     {
       title: 'Winners',
-      value: winCount ? winCount : 0,
+      value: winCount || 0,
       color: 'green',
     },
     {
       title: 'Losers',
-      value: 2,
+      value: lossCount || 0,
       color: 'red',
     },
   ]
@@ -57,7 +62,7 @@ function WinPercentage({ winCount, totalCount }: WinPercentageProps) {
       <CardContent>
         <ReactApexChart
           options={config}
-          height={350}
+          height={320}
           series={config.series}
           type="radialBar"
         />
