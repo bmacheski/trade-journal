@@ -19,7 +19,8 @@ import { getTrade, updateTrade, createTrade } from '../../api/trades'
 import { getPairs } from '../../api/pairs'
 import { getSetups, Setup } from '../../api/setups'
 import { DateTimePicker } from '@material-ui/pickers'
-import { getPlatforms } from '../../api/platform'
+import { getPlatforms } from '../../api/platforms'
+import { getTags } from '../../api/tags'
 
 function parseDateFields(values: any) {
   const { entry_date, exit_date } = values
@@ -43,6 +44,7 @@ function TradeForm() {
   const [trade, setTrade] = React.useState<any>(null)
   const [pairs, setPairs] = React.useState<any[]>([])
   const [setups, setSetups] = React.useState<any[]>([])
+  const [tags, setTags] = React.useState<any[]>([])
   const [platforms, setPlatforms] = React.useState<any[]>([])
 
   const inputProps = {
@@ -59,6 +61,7 @@ function TradeForm() {
         getPairs().then((res) => setPairs(res)),
         getSetups().then((res) => setSetups(res)),
         getPlatforms().then((res) => setPlatforms(res)),
+        getTags().then((res) => setTags(res)),
       ]
       if (id != 'new') promises.push(getTrade(id).then((res) => setTrade(res)))
       setLoading(true)
@@ -284,7 +287,30 @@ function TradeForm() {
                       value.id === option.id
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="Setup" {...inputProps} />
+                      <TextField {...params} label="Setups" {...inputProps} />
+                    )}
+                  />
+                </Grid>
+                <Grid item lg={12} md={12} xs={12}>
+                  <Autocomplete
+                    multiple
+                    id="setup-autocomplete"
+                    options={tags}
+                    value={props.values?.trade_tags || []}
+                    getOptionLabel={(option: any) => option.name || ''}
+                    onChange={(_, val: any) =>
+                      props.setFieldValue('trade_tags', onSetupChange(val))
+                    }
+                    getOptionSelected={(option, value = []) =>
+                      value.id === option.id
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        helperText="Use tags to track emotions, mistakes, etc."
+                        label="Tags"
+                        {...inputProps}
+                      />
                     )}
                   />
                 </Grid>

@@ -4,16 +4,21 @@ import {
   deleteSetup,
   createSetup,
   updateSetup,
+  Setup,
 } from '../../api/setups'
-import MaterialTable from 'material-table'
-import { Grid, Card, CardContent, Typography } from '@material-ui/core'
+import MaterialTable, { Query } from 'material-table'
+import { Grid, Card, CardContent, CircularProgress } from '@material-ui/core'
 import { getPairs } from '../../api/pairs'
-import { getPlatforms } from '../../api/platform'
+import { getPlatforms } from '../../api/platforms'
+import { getTags } from '../../api/tags'
+import { buildAsyncRows } from '../../utils/asyncPagination'
 
 function Admin() {
-  const [setups, setSetups] = React.useState<any[]>([])
+  const [setups, setSetups] = React.useState<Setup[]>([])
   const [pairs, setPairs] = React.useState<any[]>([])
   const [platforms, setPlatforms] = React.useState<any[]>([])
+  const [tags, setTags] = React.useState<any[]>([])
+  const [loading, setLoading] = React.useState<boolean>(false)
 
   function loadSetups() {
     getSetups().then((res) => setSetups(res))
@@ -27,19 +32,34 @@ function Admin() {
     getPlatforms().then((res) => setPlatforms(res))
   }
 
+  function loadTags() {
+    getTags().then((res) => setTags(res))
+  }
+
   React.useEffect(() => {
-    loadSetups()
-    loadPairs()
-    loadExchanges()
+    async function initialize() {
+      try {
+        setLoading(true)
+        await Promise.all([
+          loadSetups(),
+          loadPairs(),
+          loadExchanges(),
+          loadTags(),
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    initialize()
   }, [])
+
+  if (loading) return <CircularProgress />
 
   return (
     <>
-      <Typography variant="h5" noWrap>
-        Admin
-      </Typography>
       <Grid container spacing={4}>
-        <Grid item md={4} xs={12}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
@@ -50,7 +70,9 @@ function Admin() {
                     field: 'name',
                   },
                 ]}
-                data={pairs}
+                data={(query: Query<object>): any =>
+                  buildAsyncRows(query, getPairs)
+                }
                 options={{
                   selection: true,
                   search: false,
@@ -96,7 +118,7 @@ function Admin() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={4} xs={12}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
@@ -120,13 +142,37 @@ function Admin() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={4} xs={12}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent>
               <MaterialTable
                 title="Exchanges"
                 columns={[{ title: 'Name', field: 'name' }]}
                 data={platforms}
+                options={{
+                  selection: true,
+                  search: false,
+                }}
+                editable={{
+                  onRowAdd: (newData) => createSetup(newData).then(loadSetups),
+                  onRowUpdate: (newData, oldData) =>
+                    updateSetup(newData.id, {
+                      name: newData.name,
+                    }).then(loadSetups),
+                  onRowDelete: (oldData) =>
+                    deleteSetup(oldData.id).then(loadSetups),
+                }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <Card>
+            <CardContent>
+              <MaterialTable
+                title="Tags"
+                columns={[{ title: 'Name', field: 'name' }]}
+                data={tags}
                 options={{
                   selection: true,
                   search: false,

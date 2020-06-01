@@ -11,7 +11,7 @@ export function getTrade(id: number | null = null) {
 
 export function getTrades(
   page: number,
-  sort: string | null,
+  sort: string | undefined,
   direction: 'asc' | 'desc' | 'none',
   countPerPage: number,
 ) {
@@ -48,4 +48,9 @@ export function updateTrade(id, data) {
 export function deleteTrade(id) {
   const url = `${TRADES_URL}/${id}`
   return fetch(url, { method: 'delete' })
+}
+
+export function getTradeMetrics() {
+  const url = `${TRADES_URL}/metrics`
+  return fetch(url).then(extractData)
 }

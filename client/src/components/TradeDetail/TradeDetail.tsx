@@ -45,10 +45,11 @@ function TradeDetail() {
             <Card className={classes.card}>
               <CardHeader title="Trade Details"></CardHeader>
               <TradeTable
-                title=""
+                title="Trade Detail"
                 trades={trades}
                 onEditClick={onEditClick}
                 isDetailView={true}
+                hideFilter={true}
               />
             </Card>
             {trade.image_url && (
@@ -77,6 +78,18 @@ function TradeDetail() {
                 <Card>
                   <CardContent>
                     {trade.trade_setups.map(({ id, name }) => (
+                      <Chip className={classes.chip} key={id} label={name} />
+                    ))}
+                  </CardContent>
+                </Card>
+              </Card>
+            )}
+            {trade.trade_setups.length > 0 && (
+              <Card className={classes.card}>
+                <CardHeader title="Tags"></CardHeader>
+                <Card>
+                  <CardContent>
+                    {trade.trade_tags.map(({ id, name }) => (
                       <Chip className={classes.chip} key={id} label={name} />
                     ))}
                   </CardContent>

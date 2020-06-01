@@ -3,6 +3,8 @@ class Trade < ApplicationRecord
   belongs_to :platform
   has_many :trade_setups
   has_many :setups, through: :trade_setups
+  has_many :trade_tags
+  has_many :tags, through: :trade_tags
 
   before_save :set_risk_reward_ratio, :set_risk_multiple, :set_is_win
 
@@ -40,28 +42,8 @@ class Trade < ApplicationRecord
     ActiveRecord::Base.connection.execute(query)
   end
 
-  def self.setup_metrics
-    query = <<~SQL
-      select name
-      , count(
-        case 
-        when action = 'buy' and entry_price < exit_price then 1
-        when action = 'sell' and entry_price > exit_price then 1
-        else null
-        end
-      ) win_count
-      ,count(
-        case when action = 'buy' and entry_price > exit_price then 1
-        when action = 'sell' and entry_price < exit_price then 1
-        else null
-        end
-      ) loss_count
-      from trade_setups 
-      join trades on trades.id = trade_setups.trade_id
-      join setups on setups.id = trade_setups.setup_id
-      group by name
-    SQL
-    ActiveRecord::Base.connection.execute(query)
+  def self.trade_filters
+    ''
   end
 
   def set_risk_reward_ratio

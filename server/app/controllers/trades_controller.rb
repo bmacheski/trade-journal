@@ -9,7 +9,7 @@ class TradesController < ApplicationController
     @trades = Trade.order("#{sort} #{direction}").page(page).per(per_page)
     render json: { data: ActiveModel::Serializer::CollectionSerializer.new(
       @trades, each_serializer: TradeSerializer
-    ), meta: { page_count: @trades.total_pages, page: page.to_i, total_count: Trade.count } }
+    ), meta: { page_count: @trades.total_pages, page: page.to_i, total_count: Trade.count, filters: Trade.filters } }
   end
 
   def create
@@ -51,11 +51,6 @@ class TradesController < ApplicationController
   def metrics
     metrics = Trade.metrics
     render json: metrics.first, status: :ok
-  end
-
-  def setup_metrics
-    setup_metrics = Trade.setup_metrics
-    render json: setup_metrics, status: :ok
   end
 
   private

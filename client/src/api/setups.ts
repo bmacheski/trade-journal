@@ -7,14 +7,14 @@ export interface Setup {
   setup_id?: number
 }
 
+const SETUPS_URL = `${API_URL}/setups`
+
 export function getSetups() {
-  let url = `${API_URL}/setups`
-  return fetch(url).then(extractData)
+  return fetch(SETUPS_URL).then(extractData)
 }
 
 export function createSetup(data) {
-  let url = `${API_URL}/setups`
-  return fetch(url, {
+  return fetch(SETUPS_URL, {
     method: 'post',
     body: JSON.stringify({ setup: data }),
     headers: {
@@ -24,7 +24,7 @@ export function createSetup(data) {
 }
 
 export function updateSetup(id, data) {
-  const url = `${API_URL}/setups/${id}`
+  const url = `${SETUPS_URL}/${id}`
   return fetch(url, {
     method: 'put',
     body: JSON.stringify({ setup: data }),
@@ -35,6 +35,11 @@ export function updateSetup(id, data) {
 }
 
 export function deleteSetup(id) {
-  const url = `${API_URL}/setups/${id}`
+  const url = `${SETUPS_URL}/${id}`
   return fetch(url, { method: 'delete' })
+}
+
+export function getSetupMetrics() {
+  const url = `${SETUPS_URL}/metrics`
+  return fetch(url).then(extractData)
 }

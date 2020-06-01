@@ -6,6 +6,7 @@ import MaterialTable from 'material-table'
 import useStyles from './TradeTable.styles'
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import TradeTableToolbar from '../TradeTableToolbar/TradeTableToolbar'
 
 interface TradeTableProps {
   trades: any
@@ -14,6 +15,7 @@ interface TradeTableProps {
   onRowClick?: (a, b) => void
   title: string
   isDetailView?: boolean
+  hideFilter?: boolean
 }
 
 function TradeTable({
@@ -22,6 +24,7 @@ function TradeTable({
   onRowClick,
   title,
   isDetailView = false,
+  hideFilter,
 }: TradeTableProps) {
   const classes = useStyles()
   const columns = [
@@ -31,6 +34,7 @@ function TradeTable({
     },
     {
       title: 'Status',
+      field: 'status',
       render: (row) => {
         const isOpen = !row.exit_date
         return (
@@ -74,26 +78,32 @@ function TradeTable({
     },
     {
       title: 'Entry Date',
+      field: 'exit_price',
       render: (row) => dateFormatter.toShortDate(row.entry_date),
     },
     {
       title: 'Exit Date',
+      field: 'exit_date',
       render: (row) => dateFormatter.toShortDate(row.exit_date),
     },
     {
       title: 'Entry Price',
+      field: 'entry_price',
       render: (row) => dollarFormatter.format(row.entry_price),
     },
     {
       title: 'Exit Price',
+      field: 'exit_price',
       render: (row) => dollarFormatter.format(row.exit_price),
     },
     {
       title: 'RRR Planned',
+      field: 'risk_reward_ratio',
       render: (row) => Number(row.risk_reward_ratio).toFixed(2),
     },
     {
       title: 'R-Multiple',
+      field: 'risk_multiple',
       render: (row) => Number(row.risk_multiple).toFixed(1),
     },
     {
@@ -128,6 +138,11 @@ function TradeTable({
     <div className={classes.root}>
       <MaterialTable
         columns={columns}
+        components={{
+          Toolbar: (props) => (
+            <TradeTableToolbar hideFilter={hideFilter || false} {...props} />
+          ),
+        }}
         data={trades}
         title={title}
         onRowClick={onRowClick}

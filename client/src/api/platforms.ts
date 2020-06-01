@@ -1,7 +1,8 @@
 import { API_URL } from '../constants/url'
 import { extractData } from './common'
 
+const PLATFORMS_URL = `${API_URL}/platforms`
+
 export function getPlatforms() {
-  let url = `${API_URL}/platforms`
-  return fetch(url).then(extractData)
+  return fetch(PLATFORMS_URL).then(extractData)
 }

@@ -32,6 +32,11 @@ class SetupsController < ApplicationController
     end
   end
 
+  def metrics
+    setup_metrics = Setup.metrics
+    render json: setup_metrics, status: :ok
+  end
+
   private
 
   def set_setup

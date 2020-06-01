@@ -1,7 +1,8 @@
 import { API_URL } from '../constants/url'
 import { extractData } from './common'
 
+const PAIRS_URL = `${API_URL}/pairs`
+
 export function getPairs() {
-  let url = `${API_URL}/pairs`
-  return fetch(url).then(extractData)
+  return fetch(PAIRS_URL).then(extractData)
 }

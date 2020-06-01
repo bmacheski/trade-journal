@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
+  resources :pairs
+  resources :platforms
+  resources :tags do
+    get :metrics, on: :collection
+  end
+
   resources :trades do
     get :metrics, on: :collection
-    get :setup_metrics, on: :collection
   end
-  resources :pairs
-  resources :setups
-  resources :platforms
+
+  resources :setups do
+    get :metrics, on: :collection
+  end
 end

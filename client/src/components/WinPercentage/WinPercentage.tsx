@@ -7,12 +7,14 @@ interface WinPercentageProps {
   winCount: number
   lossCount: number
   totalCount: number
+  height: number
 }
 
 function WinPercentage({
   winCount,
   lossCount,
   totalCount,
+  height,
 }: WinPercentageProps) {
   const classes = useStyles()
   const [config, setConfig] = React.useState({
@@ -62,7 +64,7 @@ function WinPercentage({
       <CardContent>
         <ReactApexChart
           options={config}
-          height={320}
+          height={height}
           series={config.series}
           type="radialBar"
         />
