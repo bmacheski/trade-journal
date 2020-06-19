@@ -1,7 +1,27 @@
 import React from 'react'
-import { Card, CardContent, Typography } from '@material-ui/core'
+import { Card, CardContent, Typography, makeStyles } from '@material-ui/core'
 import ReactApexChart from 'react-apexcharts'
-import useStyles from './WinPercentage.styles'
+
+const useStyles = makeStyles(() => ({
+  root: {
+    height: '100%',
+  },
+  chartContainer: {
+    position: 'relative',
+    height: '300px',
+  },
+  stats: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  device: {
+    textAlign: 'center',
+    padding: '0 8px 8px 0',
+  },
+  deviceIcon: {
+    color: '#546e7a',
+  },
+}))
 
 interface WinPercentageProps {
   winCount: number

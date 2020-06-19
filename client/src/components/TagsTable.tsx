@@ -1,7 +1,7 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-import { createSetup, updateSetup, deleteSetup } from '../../api/setups'
-import { getTags } from '../../api/tags'
+import { createSetup, updateSetup, deleteSetup } from '../api/setups'
+import { getTags } from '../api/tags'
 
 interface TagsTableProps {
   editable: boolean

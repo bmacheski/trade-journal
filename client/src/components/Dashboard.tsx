@@ -1,11 +1,36 @@
 import React from 'react'
-import { Card, CardContent, Grid, CardHeader } from '@material-ui/core'
-import WinPercentage from '../WinPercentage/WinPercentage'
-import { getTradeMetrics } from '../../api/trades'
-import useStyles from './Dashboard.styles'
-import SetupReport from '../SetupReport/SetupReport'
+import {
+  Card,
+  CardContent,
+  Grid,
+  CardHeader,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core'
+import WinPercentage from './WinPercentage'
+import { getTradeMetrics } from '../api/trades'
+import SetupReport from './SetupReport'
 import MaterialTable from 'material-table'
-import { getTagMetrics } from '../../api/tags'
+import { getTagMetrics } from '../api/tags'
+
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    card: {
+      minHeight: 100,
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      fontSize: 20,
+    },
+    long: {
+      color: 'green',
+    },
+    short: {
+      color: 'red',
+    },
+  })
+})
 
 function Dashboard() {
   const classes = useStyles()

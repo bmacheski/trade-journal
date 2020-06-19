@@ -11,16 +11,16 @@ import {
   CircularProgress,
 } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router-dom'
-import { ROUTES } from '../../Router'
-import * as dateFormatter from '../../utils/date'
+import { ROUTES } from '../Router'
+import * as dateFormatter from '../utils/date'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
-import { getTrade, updateTrade, createTrade } from '../../api/trades'
-import { getPairs } from '../../api/pairs'
-import { getSetups, Setup } from '../../api/setups'
+import { getTrade, updateTrade, createTrade } from '../api/trades'
+import { getPairs } from '../api/pairs'
+import { getSetups, Setup } from '../api/setups'
 import { DateTimePicker } from '@material-ui/pickers'
-import { getPlatforms } from '../../api/platforms'
-import { getTags } from '../../api/tags'
+import { getPlatforms } from '../api/platforms'
+import { getTags } from '../api/tags'
 
 function parseDateFields(values: any) {
   const { entry_date, exit_date } = values

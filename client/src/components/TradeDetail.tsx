@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams, Redirect } from 'react-router-dom'
-import TradeTable from '../TradeTable/TradeTable'
+import TradeTable from './TradeTable'
 import {
   Card,
   CardContent,
@@ -8,10 +8,34 @@ import {
   Chip,
   Typography,
   CircularProgress,
+  makeStyles,
+  Theme,
+  createStyles,
 } from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
-import { getTrade } from '../../api/trades'
-import useStyles from './TradeDetail.styles'
+import { getTrade } from '../api/trades'
+
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    card: {
+      marginTop: 10,
+    },
+    screenshot: {
+      maxHeight: '70vh',
+    },
+    message: {
+      padding: theme.spacing(2),
+    },
+    messageContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      margin: theme.spacing(1),
+    },
+    chip: {
+      margin: theme.spacing(0.5),
+    },
+  })
+})
 
 function TradeDetail() {
   const classes = useStyles()

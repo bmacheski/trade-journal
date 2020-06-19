@@ -1,12 +1,52 @@
-import { Chip } from '@material-ui/core'
+import {
+  Chip,
+  lighten,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core'
 import React from 'react'
-import * as dateFormatter from '../../utils/date'
-import * as dollarFormatter from '../../utils/dollar'
+import * as dateFormatter from '../utils/date'
+import * as dollarFormatter from '../utils/dollar'
 import MaterialTable from 'material-table'
-import useStyles from './TradeTable.styles'
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import TradeTableToolbar from '../TradeTableToolbar/TradeTableToolbar'
+import TradeTableToolbar from './TradeTableToolbar'
+
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    table: {
+      minWidth: 650,
+    },
+    container: {
+      marginTop: '10px',
+    },
+    root: {
+      width: '100%',
+    },
+    paper: {
+      width: '100%',
+    },
+    hightlight: {
+      color: theme.palette.secondary.main,
+      backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+    },
+    clickable: {
+      cursor: 'pointer',
+    },
+    sortArrow: {
+      verticalAlign: 'middle',
+    },
+    sellBadge: {
+      backgroundColor: '#f83245',
+      color: '#fff',
+    },
+    buyBadge: {
+      backgroundColor: '#1bc943',
+      color: '#fff',
+    },
+  })
+})
 
 interface TradeTableProps {
   trades: any

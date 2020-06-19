@@ -1,11 +1,6 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-import {
-  getSetups,
-  createSetup,
-  updateSetup,
-  deleteSetup,
-} from '../../api/setups'
+import { getSetups, createSetup, updateSetup, deleteSetup } from '../api/setups'
 
 interface SetupsTableProps {
   editable: boolean

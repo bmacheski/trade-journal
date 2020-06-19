@@ -5,13 +5,13 @@ import {
   createSetup,
   updateSetup,
   Setup,
-} from '../../api/setups'
+} from '../api/setups'
 import MaterialTable, { Query } from 'material-table'
 import { Grid, Card, CardContent, CircularProgress } from '@material-ui/core'
-import { getPairs } from '../../api/pairs'
-import { getPlatforms } from '../../api/platforms'
-import { getTags } from '../../api/tags'
-import { buildAsyncRows } from '../../utils/asyncPagination'
+import { getPairs } from '../api/pairs'
+import { getPlatforms } from '../api/platforms'
+import { getTags } from '../api/tags'
+import { buildAsyncRows } from '../utils/asyncPagination'
 
 function Admin() {
   const [setups, setSetups] = React.useState<Setup[]>([])

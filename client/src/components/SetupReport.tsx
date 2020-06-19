@@ -1,6 +1,6 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-import { getSetupMetrics } from '../../api/setups'
+import { getSetupMetrics } from '../api/setups'
 
 function SetupReport() {
   return (
