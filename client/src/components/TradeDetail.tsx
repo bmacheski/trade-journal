@@ -53,12 +53,7 @@ function TradeDetail() {
       .finally(() => setLoading(false))
   }, [])
 
-  function onEditClick(id): void {
-    setRedirect(`/trades/${id}/edit`)
-  }
-
   if (loading) return <CircularProgress />
-
   if (redirect) return <Redirect to={redirect} />
 
   return (
@@ -67,13 +62,12 @@ function TradeDetail() {
         return (
           <div key={trade.id}>
             <Card className={classes.card}>
-              <CardHeader title="Trade Details"></CardHeader>
               <TradeTable
-                title="Trade Detail"
+                title=""
                 trades={trades}
-                onEditClick={onEditClick}
+                onEditClick={() => setRedirect(`/trades/${id}/edit`)}
                 isDetailView={true}
-                hideFilter={true}
+                showFilter={false}
               />
             </Card>
             {trade.image_url && (

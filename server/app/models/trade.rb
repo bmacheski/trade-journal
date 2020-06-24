@@ -42,8 +42,18 @@ class Trade < ApplicationRecord
     ActiveRecord::Base.connection.execute(query)
   end
 
-  def self.trade_filters
-    ''
+  def self.filters
+    filters = {
+      pair: Trade.joins(:pair).pluck(:name).uniq,
+      status: %w[open closed],
+      win: %w[yes no],
+      side: %w[buy sell],
+      tp_hit: %w[yes no]
+    }
+    filters.each do |k, _v|
+      filters[k] = filters[k].map { |f| { name: k, value: f } }
+    end
+    filters
   end
 
   def set_risk_reward_ratio

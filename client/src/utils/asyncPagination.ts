@@ -11,9 +11,8 @@ export function buildAsyncRows(query: Query<object>, fn: AsyncFn) {
   return new Promise((resolve) => {
     const page = query.page + 1
     const orderBy = query.orderBy?.field
-    fn(page, orderBy, query.orderDirection, 20)
+    fn(page, orderBy, query.orderDirection, 2)
       .then((res) => {
-        console.log('res', res)
         resolve({
           data: res.data,
           page: res.meta.page - 1,

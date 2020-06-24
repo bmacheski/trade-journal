@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   resources :trades do
     get :metrics, on: :collection
+    get :filters, on: :collection
   end
 
   resources :setups do

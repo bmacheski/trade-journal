@@ -6,10 +6,19 @@ class TradesController < ApplicationController
     sort = params[:sort] || :created_at
     direction = params[:direction] || :asc
     per_page = params[:count_per_page] || 20
-    @trades = Trade.order("#{sort} #{direction}").page(page).per(per_page)
+    @trades = Trade.joins(:pair)
+
+    @trades = @trades.where('pairs.name in (?)', params[:pair]) unless params[:pair].nil?
+    @trades = @trades.where('is_win in (?)', params[:win]) unless params[:win].nil?
+    unless params[:tp_hit].nil?
+      @trades = @trades.where('original_take_profit_hit in (?)', params[:tp_hit])
+    end
+    @trades = @trades.where('action in (?)', params[:side]) unless params[:side].nil?
+
+    @trades = @trades.order("#{sort} #{direction}").page(page).per(per_page)
     render json: { data: ActiveModel::Serializer::CollectionSerializer.new(
       @trades, each_serializer: TradeSerializer
-    ), meta: { page_count: @trades.total_pages, page: page.to_i, total_count: Trade.count, filters: Trade.filters } }
+    ), meta: { page_count: @trades.total_pages, page: page.to_i, total_count: Trade.count } }
   end
 
   def create
@@ -51,6 +60,11 @@ class TradesController < ApplicationController
   def metrics
     metrics = Trade.metrics
     render json: metrics.first, status: :ok
+  end
+
+  def filters
+    filters = Trade.filters
+    render json: filters, status: :ok
   end
 
   private
