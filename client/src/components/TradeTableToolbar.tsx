@@ -4,42 +4,28 @@ import {
   Theme,
   createStyles,
   Chip,
+  MenuList,
+  MenuItem,
+  Checkbox,
 } from '@material-ui/core'
 import React from 'react'
 import { getTradeFilters } from '../api/trades'
 import { DateTimePicker } from '@material-ui/pickers'
 import Dropdown from './Dropdown'
 import { Filter } from '../types'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@material-ui/icons/CheckBox'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    container: {
-      alignItems: 'center',
-      display: 'flex',
-      margin: 10,
-      flexBasis: 400,
-    },
-    icon: {
-      fontSize: '1rem',
-    },
-    autocompleteInput: {
-      flex: 1,
-    },
-    chip: {
-      margin: 3,
-    },
     filterTitle: {
       fontSize: 12,
     },
   }),
 )
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
+const checkedIcon = <CheckBoxIcon fontSize="small" />
 
 interface TradeTableToolbarProps {
   onItemSelect: (a, b) => void
@@ -55,14 +41,32 @@ function TradeTableToolbar({
   const classes = useStyles()
   const [filters, setFilters] = React.useState<Filter[]>([])
 
-  function renderAutocomplete(optionField: string, title: string) {
+  function renderAutocompleteList(optionField: string, title: string) {
     return (
-      <Dropdown
-        buttonName={title}
-        selectedItems={selectedFilters}
-        menuItems={filters[optionField]}
-        onSelect={(val) => onItemSelect(val, optionField)}
-      />
+      <Dropdown buttonName={title}>
+        {({ open, handleListKeyDown }) => {
+          return (
+            <MenuList
+              autoFocusItem={open}
+              id="menu-list-grow"
+              onKeyDown={handleListKeyDown}
+            >
+              {filters[optionField]?.map((item) => {
+                return (
+                  <MenuItem onClick={() => onItemSelect(item, optionField)}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      checked={selectedFilters.includes(item)}
+                    />
+                    {item.value}
+                  </MenuItem>
+                )
+              })}
+            </MenuList>
+          )
+        }}
+      </Dropdown>
     )
   }
 
@@ -81,32 +85,32 @@ function TradeTableToolbar({
   const filterData = [
     {
       title: 'Pair',
-      renderSelect: () => renderAutocomplete('pair', 'Pair'),
+      renderSelect: () => renderAutocompleteList('pair', 'Pair'),
       enabled: true,
     },
     {
       title: 'Pair',
-      renderSelect: () => renderAutocomplete('pair', 'Pair'),
+      renderSelect: () => renderAutocompleteList('pair', 'Pair'),
       enabled: false,
     },
     {
       title: 'Status',
-      renderSelect: () => renderAutocomplete('status', 'Status'),
+      renderSelect: () => renderAutocompleteList('status', 'Status'),
       enabled: false,
     },
     {
       title: 'Win',
-      renderSelect: () => renderAutocomplete('win', 'Win'),
+      renderSelect: () => renderAutocompleteList('win', 'Win'),
       enabled: true,
     },
     {
       title: 'TP Hit',
-      renderSelect: () => renderAutocomplete('tp_hit', 'TP Hit'),
+      renderSelect: () => renderAutocompleteList('tp_hit', 'TP Hit'),
       enabled: true,
     },
     {
       title: 'Side',
-      renderSelect: () => renderAutocomplete('side', 'Side'),
+      renderSelect: () => renderAutocompleteList('side', 'Side'),
       enabled: true,
     },
     {
@@ -133,7 +137,7 @@ function TradeTableToolbar({
     },
     {
       title: 'TP Hit',
-      renderSelect: () => renderAutocomplete('tp_hit', 'TP Hit'),
+      renderSelect: () => renderAutocompleteList('tp_hit', 'TP Hit'),
     },
   ]
 

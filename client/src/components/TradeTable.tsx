@@ -1,51 +1,17 @@
-import {
-  Chip,
-  lighten,
-  makeStyles,
-  Theme,
-  createStyles,
-  TableContainer,
-  Paper,
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableSortLabel,
-} from '@material-ui/core'
+import { Chip, makeStyles, Theme, createStyles } from '@material-ui/core'
 import React from 'react'
 import * as dateFormatter from '../utils/date'
 import * as dollarFormatter from '../utils/dollar'
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import TradeTableToolbar from './TradeTableToolbar'
-import get from 'lodash/get'
-import Pagination from '@material-ui/lab/Pagination'
 import noop from 'lodash/noop'
+import Table from './Table'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
-    table: {
-      minWidth: 650,
-    },
-    container: {
-      marginTop: '10px',
-    },
     root: {
       width: '100%',
-    },
-    paper: {
-      width: '100%',
-    },
-    hightlight: {
-      color: theme.palette.secondary.main,
-      backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-    },
-    clickable: {
-      cursor: 'pointer',
-    },
-    sortArrow: {
-      verticalAlign: 'middle',
     },
     sellBadge: {
       backgroundColor: '#f83245',
@@ -221,58 +187,25 @@ function TradeTable({
 
   return (
     <div className={classes.root}>
-      <TableContainer component={Paper}>
-        {showFilter && (
-          <TradeTableToolbar
-            onItemSelect={onToolbarItemSelect}
-            selectedFilters={selectedFilters}
-            onChipClick={onChipClick}
-          />
-        )}
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              {columns.map((c) => (
-                <TableCell>
-                  <TableSortLabel
-                    disabled={!c.sort}
-                    active={orderBy === c.field}
-                    direction={sortDirection}
-                    onClick={() => onSortClick(c.field)}
-                  >
-                    {c.title}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {trades.map((currTrade) => {
-              return (
-                <TableRow
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => onRowClick && onRowClick(currTrade.id)}
-                >
-                  {columns.map((currColumn) => {
-                    return (
-                      <TableCell>
-                        {currColumn.render
-                          ? currColumn.render(currTrade)
-                          : get(currTrade, currColumn.field)}
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        style={{ padding: 10 }}
-        count={pageCount}
-        page={currPage}
-        onChange={(_, page) => handlePageChange(page)}
+      <Table
+        columns={columns}
+        items={trades}
+        pageCount={pageCount || 0}
+        currPage={currPage || 0}
+        sortDirection={sortDirection}
+        handlePageChange={handlePageChange}
+        onRowClick={onRowClick}
+        renderToolbar={() =>
+          showFilter ? (
+            <TradeTableToolbar
+              onItemSelect={onToolbarItemSelect}
+              selectedFilters={selectedFilters}
+              onChipClick={onChipClick}
+            />
+          ) : (
+            <></>
+          )
+        }
       />
     </div>
   )

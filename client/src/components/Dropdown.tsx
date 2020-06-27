@@ -1,34 +1,24 @@
 import {
   Button,
-  Checkbox,
-  MenuItem,
   Paper,
-  MenuList,
   Popper,
   Grow,
   ClickAwayListener,
 } from '@material-ui/core'
 import React from 'react'
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@material-ui/icons/CheckBox'
-import { Filter } from '../types'
 
 interface DropdownProps {
   buttonName: string
-  menuItems?: Filter[]
-  onSelect: (item: Filter) => void
-  selectedItems: Filter[]
+  children: ({
+    open,
+    handleListKeyDown,
+  }: {
+    open: boolean
+    handleListKeyDown: any
+  }) => JSX.Element
 }
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
-const checkedIcon = <CheckBoxIcon fontSize="small" />
-
-function Dropdown({
-  buttonName,
-  menuItems,
-  onSelect,
-  selectedItems,
-}: DropdownProps) {
+function Dropdown({ buttonName, children }: DropdownProps) {
   const [open, setOpen] = React.useState(false)
   const anchorRef = React.useRef<HTMLButtonElement>(null)
 
@@ -41,11 +31,11 @@ function Dropdown({
     prevOpen.current = open
   }, [open])
 
-  const handleToggle = () => {
+  function handleToggle() {
     setOpen((prevOpen) => !prevOpen)
   }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+  function handleClose(event: React.MouseEvent<EventTarget>) {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -94,24 +84,7 @@ function Dropdown({
           >
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  {menuItems?.map((item) => {
-                    return (
-                      <MenuItem onClick={() => onSelect(item)}>
-                        <Checkbox
-                          icon={icon}
-                          checkedIcon={checkedIcon}
-                          checked={selectedItems.includes(item)}
-                        />
-                        {item.value}
-                      </MenuItem>
-                    )
-                  })}
-                </MenuList>
+                {children({ open, handleListKeyDown })}
               </ClickAwayListener>
             </Paper>
           </Grow>

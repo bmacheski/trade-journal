@@ -6,7 +6,7 @@ export function buildFilterQueryString(filters: Filter[]) {
     url += '&'
     filters.forEach((e, idx) => {
       url += `${e.name}[]=${e.value}`
-      if (idx != filters.length - 1) url += '&'
+      if (idx !== filters.length - 1) url += '&'
     })
   }
   return url

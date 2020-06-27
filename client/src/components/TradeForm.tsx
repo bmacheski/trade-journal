@@ -63,7 +63,7 @@ function TradeForm() {
         getPlatforms().then((res) => setPlatforms(res)),
         getTags().then((res) => setTags(res)),
       ]
-      if (id != 'new') promises.push(getTrade(id).then((res) => setTrade(res)))
+      if (id !== 'new') promises.push(getTrade(id).then((res) => setTrade(res)))
       setLoading(true)
       await Promise.all(promises)
       setLoading(false)

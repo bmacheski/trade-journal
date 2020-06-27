@@ -65,6 +65,12 @@ function Sidebar(props: SidebarProps) {
   const classes = useStyles(props)
   const theme = useTheme()
 
+  const routes = [
+    { icon: Dashboard, text: 'Dashboard', path: ROUTES.DASHBOARD },
+    { icon: ShowChart, text: 'Trades', path: ROUTES.TRADE_LIST },
+    { icon: Settings, text: 'Admin', path: ROUTES.ADMIN },
+  ]
+
   return (
     <Drawer
       variant="permanent"
@@ -90,36 +96,20 @@ function Sidebar(props: SidebarProps) {
       </div>
       <Divider />
       <List>
-        <Link component={RouterLink} to={ROUTES.DASHBOARD}>
-          <Tooltip title="Dashboard" placement="right">
-            <ListItem button>
-              <ListItemIcon>
-                <Dashboard />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
-          </Tooltip>
-        </Link>
-        <Link component={RouterLink} to={ROUTES.TRADE_LIST}>
-          <Tooltip title="Trades" placement="right">
-            <ListItem button>
-              <ListItemIcon>
-                <ShowChart />
-              </ListItemIcon>
-              <ListItemText primary="Trades" />
-            </ListItem>
-          </Tooltip>
-        </Link>
-        <Link component={RouterLink} to={ROUTES.ADMIN}>
-          <Tooltip title="Admin" placement="right">
-            <ListItem button>
-              <ListItemIcon>
-                <Settings />
-              </ListItemIcon>
-              <ListItemText primary="Admin" />
-            </ListItem>
-          </Tooltip>
-        </Link>
+        {routes.map(({ icon: ListIcon, text, path }, idx) => {
+          return (
+            <Link component={RouterLink} to={path} key={idx}>
+              <Tooltip title="Dashboard" placement="right">
+                <ListItem button>
+                  <ListItemIcon>
+                    <ListIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
+            </Link>
+          )
+        })}
       </List>
     </Drawer>
   )
