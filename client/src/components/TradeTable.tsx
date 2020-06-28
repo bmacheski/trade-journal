@@ -7,6 +7,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import TradeTableToolbar from './TradeTableToolbar'
 import noop from 'lodash/noop'
 import Table from './Table'
+import { SortDirection, Trade } from '../types'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -25,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 interface TradeTableProps {
-  trades: any[]
+  trades: Trade[]
   onDeleteSuccess?: () => void
-  onEditClick: (id) => void
-  onRowClick?: (id) => void
+  onEditClick: (id: number) => void
+  onRowClick?: (id: number) => void
   title: string
   isDetailView?: boolean
   showFilter?: boolean
@@ -39,7 +40,7 @@ interface TradeTableProps {
   selectedFilters?: any[]
   onToolbarItemSelect?: (a, b) => void
   orderBy?: string | null
-  sortDirection?: 'asc' | 'desc'
+  sortDirection?: SortDirection
   onSortClick?: (val) => void
   onChipClick?: (index: number) => void
 }
@@ -47,9 +48,7 @@ interface TradeTableProps {
 function TradeTable({
   trades,
   onEditClick,
-  onRowClick,
-  title,
-  isDetailView = false,
+  onRowClick = noop,
   showFilter,
   pageCount,
   currPage,
@@ -183,7 +182,7 @@ function TradeTable({
     },
   ]
 
-  if (!trades) return null
+  if (!trades) return <></>
 
   return (
     <div className={classes.root}>
@@ -194,7 +193,7 @@ function TradeTable({
         currPage={currPage || 0}
         sortDirection={sortDirection}
         handlePageChange={handlePageChange}
-        onRowClick={onRowClick}
+        onRowClick={(trade) => onRowClick(trade.id)}
         renderToolbar={() =>
           showFilter ? (
             <TradeTableToolbar

@@ -1,6 +1,5 @@
 import {
   makeStyles,
-  Theme,
   createStyles,
   TableContainer,
   Paper,
@@ -9,69 +8,76 @@ import {
   TableRow,
   TableCell,
   TableSortLabel,
-  Table as MaterialTable,
+  Table as MaterialUITable,
 } from '@material-ui/core'
 import React from 'react'
 import get from 'lodash/get'
 import Pagination from '@material-ui/lab/Pagination'
 import noop from 'lodash/noop'
+import { SortDirection, Trade } from '../types'
 
 const useStyles = makeStyles(() => {
   return createStyles({
-    table: {
-      minWidth: 650,
-    },
     root: {
       width: '100%',
+    },
+    paginationRow: {
+      padding: 10,
+    },
+    tableRow: {
+      cursor: 'pointer',
     },
   })
 })
 
-interface TableProps {
-  columns: any[]
-  items: any[]
-  onRowClick?: Function
-  pageCount: number
-  currPage: number
+interface TableProps<T> {
+  columns: {
+    render?: (val: T) => JSX.Element | null | string
+    sort?: any
+    field: string
+    title: string
+  }[]
+  items: T[]
+  onRowClick?: (val: T) => void
+  pageCount?: number
+  currPage?: number
   handlePageChange?: Function
-  showFilter?: boolean
   orderBy?: string
   onSortClick?: (c: string) => void
-  sortDirection?: 'asc' | 'desc'
+  sortDirection?: SortDirection
   renderToolbar?: () => JSX.Element | void
 }
 
-function Table({
+function Table<T>({
   columns,
   items,
   onRowClick = noop,
   pageCount = 0,
   currPage = 0,
   handlePageChange = noop,
-  showFilter = false,
   onSortClick = noop,
   sortDirection,
   orderBy,
   renderToolbar = noop,
-}: TableProps) {
+}: TableProps<T>) {
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
       <TableContainer component={Paper}>
         {renderToolbar()}
-        <MaterialTable className={classes.table}>
+        <MaterialUITable>
           <TableHead>
             <TableRow>
-              {columns.map((c) => (
+              {columns.map((col) => (
                 <TableCell>
                   <TableSortLabel
-                    disabled={!c.sort}
-                    active={orderBy === c.field}
+                    disabled={!col.sort}
+                    active={orderBy === col.field}
                     direction={sortDirection}
-                    onClick={() => onSortClick(c.field)}
+                    onClick={() => onSortClick(col.field)}
                   >
-                    {c.title}
+                    {col.title}
                   </TableSortLabel>
                 </TableCell>
               ))}
@@ -81,8 +87,8 @@ function Table({
             {items.map((currItem) => {
               return (
                 <TableRow
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => onRowClick && onRowClick(currItem.id)}
+                  className={classes.tableRow}
+                  onClick={() => onRowClick && onRowClick(currItem)}
                 >
                   {columns.map((currColumn) => {
                     return (
@@ -97,10 +103,10 @@ function Table({
               )
             })}
           </TableBody>
-        </MaterialTable>
+        </MaterialUITable>
       </TableContainer>
       <Pagination
-        style={{ padding: 10 }}
+        className={classes.paginationRow}
         count={pageCount}
         page={currPage}
         onChange={(_, page) => handlePageChange(page)}

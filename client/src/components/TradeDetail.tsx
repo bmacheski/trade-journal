@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
 import { getTrade } from '../api/trades'
+import { Trade } from '../types'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -41,7 +42,7 @@ function TradeDetail() {
   const classes = useStyles()
   const { id }: any = useParams()
   const [loading, setLoading] = React.useState<boolean>(false)
-  const [trades, setTrades] = React.useState<any[]>([])
+  const [trades, setTrades] = React.useState<Trade[]>([])
   const [redirect, setRedirect] = React.useState<string>('')
   const [loadImageError, setLoadImageError] = React.useState<boolean>(false)
 
@@ -102,7 +103,7 @@ function TradeDetail() {
                 </Card>
               </Card>
             )}
-            {trade.trade_setups.length > 0 && (
+            {trade.trade_tags.length > 0 && (
               <Card className={classes.card}>
                 <CardHeader title="Tags"></CardHeader>
                 <Card>

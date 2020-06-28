@@ -1,7 +1,7 @@
 import { API_URL } from '../constants/url'
 import { extractData } from './common'
 import queryString from 'query-string'
-import { Filter } from '../types'
+import { Filter, SortDirection } from '../types'
 import { buildFilterQueryString } from '../utils/filter'
 
 const TRADES_URL = `${API_URL}/trades`
@@ -12,7 +12,7 @@ export const getTrade = (id: number | null = null) =>
 export const getTrades = (
   page: number,
   sort: string | null,
-  direction: 'asc' | 'desc' | 'none',
+  direction: SortDirection | 'none',
   countPerPage: number,
   filters: Filter[],
 ) => {

@@ -1,12 +1,12 @@
 import {
   Toolbar,
   makeStyles,
-  Theme,
   createStyles,
   Chip,
   MenuList,
   MenuItem,
   Checkbox,
+  Slider,
 } from '@material-ui/core'
 import React from 'react'
 import { getTradeFilters } from '../api/trades'
@@ -15,8 +15,9 @@ import Dropdown from './Dropdown'
 import { Filter } from '../types'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
+import RangeSlider from './RangeSlider'
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     filterTitle: {
       fontSize: 12,
@@ -66,6 +67,21 @@ function TradeTableToolbar({
             </MenuList>
           )
         }}
+      </Dropdown>
+    )
+  }
+
+  function renderSlider(title: string) {
+    return (
+      <Dropdown buttonName="Slider">
+        {() => (
+          <RangeSlider
+            title={title}
+            min={0}
+            max={10}
+            onValueChange={() => console.log('slider onValueChange')}
+          />
+        )}
       </Dropdown>
     )
   }
@@ -123,7 +139,6 @@ function TradeTableToolbar({
             onChange={(val) => {}}
             {...inputProps}
           />
-
           <span className={classes.filterTitle}>To:</span>
           <DateTimePicker
             name="entry_date"

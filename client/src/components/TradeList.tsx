@@ -4,14 +4,14 @@ import { ROUTES } from '../Router'
 import { Button, CardHeader, Card } from '@material-ui/core'
 import { getTrades } from '../api/trades'
 import TradeTable from './TradeTable'
-import { Filter } from '../types'
+import { Filter, Trade, SortDirection } from '../types'
 
 function TradeList() {
   const [redirect, setRedirect] = React.useState<string>('')
-  const [trades, setTrades] = React.useState<any[]>([])
+  const [trades, setTrades] = React.useState<Trade[]>([])
   const [pageCount, setPageCount] = React.useState<number>(0)
-  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>(
-    'asc',
+  const [sortDirection, setSortDirection] = React.useState<SortDirection>(
+    SortDirection.Ascending,
   )
   const [sort, setSort] = React.useState<string | null>(null)
   const [page, setPage] = React.useState<number>(1)
@@ -20,14 +20,14 @@ function TradeList() {
   function onToolbarItemSelect(value: Filter) {
     setSelectedFilters((prevFilters) => {
       return prevFilters.includes(value)
-        ? [...prevFilters.filter((f) => f != value)]
+        ? [...prevFilters.filter((f) => f !== value)]
         : [...prevFilters, value]
     })
   }
 
   function onDeleteChip(idx: number) {
     setSelectedFilters((prevFilters) => [
-      ...prevFilters.filter((_, i) => i != idx),
+      ...prevFilters.filter((_, i) => i !== idx),
     ])
   }
 
@@ -35,17 +35,21 @@ function TradeList() {
     const prevSort = sort
     setSort(incomingSort)
     setSortDirection((prevDir) =>
-      prevDir == 'asc' || incomingSort != prevSort ? 'desc' : 'asc',
+      prevDir == SortDirection.Ascending || incomingSort !== prevSort
+        ? SortDirection.Descending
+        : SortDirection.Descending,
     )
   }
 
   React.useEffect(() => {
     function fetchTrades() {
-      getTrades(page, sort, sortDirection, 20, selectedFilters).then((res) => {
-        setPageCount(res.meta.page_count)
-        setTrades(res.data)
-        setPage(res.meta.page)
-      })
+      getTrades(page, sort, sortDirection, 20, selectedFilters).then(
+        ({ meta, data }) => {
+          setPageCount(meta.page_count)
+          setTrades(data)
+          setPage(meta.page)
+        },
+      )
     }
     fetchTrades()
   }, [page, selectedFilters, sort, sortDirection])
@@ -60,7 +64,7 @@ function TradeList() {
         </Button>
       </Link>
       <Card style={{ marginTop: 10 }}>
-        <CardHeader title="Trades"></CardHeader>
+        <CardHeader title="Trades" />
         <TradeTable
           showFilter={true}
           title="Trades"
