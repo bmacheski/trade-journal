@@ -7,7 +7,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import RouterLink from 'next/link'
 import Link from '@material-ui/core/Link'
-import { ROUTES } from '../Router'
 import { useTheme, Divider } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import dynamic from 'next/dynamic'
@@ -17,7 +16,7 @@ const ShowChart = dynamic(() => import('@material-ui/icons/ShowChart'))
 const Settings = dynamic(() => import('@material-ui/icons/Settings'))
 const ChevronLeftIcon = dynamic(() => import('@material-ui/icons/ChevronLeft'))
 const ChevronRightIcon = dynamic(() =>
-  import('@material-ui/icons/ChevronRight'),
+  import('@material-ui/icons/ChevronRight')
 )
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -71,9 +70,9 @@ function Sidebar(props: SidebarProps) {
   const theme = useTheme()
 
   const routes = [
-    { icon: Dashboard, text: 'Dashboard', path: ROUTES.DASHBOARD },
-    { icon: ShowChart, text: 'Trades', path: ROUTES.TRADE_LIST },
-    { icon: Settings, text: 'Admin', path: ROUTES.ADMIN },
+    { icon: Dashboard, text: 'Dashboard', path: '/' },
+    { icon: ShowChart, text: 'Trades', path: '/trades' },
+    { icon: Settings, text: 'Admin', path: '/admin' },
   ]
 
   return (

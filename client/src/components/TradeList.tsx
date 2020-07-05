@@ -1,11 +1,11 @@
 import React from 'react'
-import { ROUTES } from '../Router'
 import { Button, CardHeader, Card } from '@material-ui/core'
 import { buildTradesUrl } from '../api/trades'
 import TradeTable from './TradeTable'
 import { Filter, Trade, SortDirection } from '../types'
 import Link from 'next/link'
 import Router from 'next/router'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 interface TradeListProps {
   trades: Trade[]
@@ -77,9 +77,9 @@ function TradeList({
 
   return (
     <>
-      <Link href={ROUTES.TREADE_CREATE}>
-        <Button color="primary" variant="outlined">
-          Add Trade
+      <Link href="/trades/create">
+        <Button color="primary" variant="contained">
+          <AddCircleOutlineIcon></AddCircleOutlineIcon>&nbsp;Create Trade
         </Button>
       </Link>
       <Card style={{ marginTop: 10 }} elevation={0}>
@@ -91,8 +91,6 @@ function TradeList({
           pageCount={pageCount}
           trades={trades}
           handlePageChange={(page) => setPage(page)}
-          onRowClick={(id) => Router.push(`/trades/${id}`)}
-          onEditClick={(id) => Router.push(`/trades/${id}/edit`)}
           selectedFilters={selectedFilters}
           onToolbarItemSelect={onToolbarItemSelect}
           sortDirection={sortDirection}
