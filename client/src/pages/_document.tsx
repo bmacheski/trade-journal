@@ -19,6 +19,10 @@ class MyDocument extends Document {
             href="static/favicon.ico"
             type="image/x-icon"
           ></link>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
           <meta name="theme-color" content={theme.palette.primary.main} />
         </Head>
         <body>

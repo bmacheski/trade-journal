@@ -2,19 +2,19 @@ import {
   makeStyles,
   createStyles,
   TableContainer,
-  Paper,
   TableBody,
   TableHead,
   TableRow,
   TableCell,
   TableSortLabel,
   Table as MaterialUITable,
+  IconButton,
 } from '@material-ui/core'
 import React from 'react'
 import get from 'lodash/get'
 import Pagination from '@material-ui/lab/Pagination'
 import noop from 'lodash/noop'
-import { SortDirection, Trade } from '../types'
+import { SortDirection } from '../types'
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -46,6 +46,7 @@ interface TableProps<T> {
   onSortClick?: (c: string) => void
   sortDirection?: SortDirection
   renderToolbar?: () => JSX.Element | void
+  actions?: any[]
 }
 
 function Table<T>({
@@ -59,6 +60,7 @@ function Table<T>({
   sortDirection,
   orderBy,
   renderToolbar = noop,
+  actions,
 }: TableProps<T>) {
   const classes = useStyles()
 
@@ -83,6 +85,7 @@ function Table<T>({
                   </TableSortLabel>
                 </TableCell>
               ))}
+              {actions && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,6 +105,24 @@ function Table<T>({
                         </TableCell>
                       )
                     })}
+                    {actions && (
+                      <TableCell>
+                        <div style={{ display: 'flex' }}>
+                          {actions.map(({ icon: Icon, onClick }) => {
+                            return (
+                              <IconButton
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  onClick(currItem)
+                                }}
+                              >
+                                <Icon />
+                              </IconButton>
+                            )
+                          })}
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 )
               })

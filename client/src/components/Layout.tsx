@@ -8,7 +8,7 @@ import clsx from 'clsx'
 import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles, Theme } from '@material-ui/core'
 
-const drawerWidth = 240
+const drawerWidth = 200
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

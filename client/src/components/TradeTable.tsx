@@ -1,4 +1,10 @@
-import { Chip, makeStyles, Theme, createStyles } from '@material-ui/core'
+import {
+  Chip,
+  makeStyles,
+  Theme,
+  createStyles,
+  IconButton,
+} from '@material-ui/core'
 import React from 'react'
 import * as dateFormatter from '../utils/date'
 import * as dollarFormatter from '../utils/dollar'
@@ -8,6 +14,9 @@ import TradeTableToolbar from './TradeTableToolbar'
 import noop from 'lodash/noop'
 import Table from './Table'
 import { SortDirection, Trade } from '../types'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
+import Router from 'next/router'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -28,10 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
 interface TradeTableProps {
   trades: Trade[]
   onDeleteSuccess?: () => void
-  onEditClick: (id: number) => void
-  onRowClick?: (id: number) => void
   title: string
-  isDetailView?: boolean
   showFilter?: boolean
   pageCount?: number
   countPerPage?: number
@@ -43,12 +49,11 @@ interface TradeTableProps {
   sortDirection?: SortDirection
   onSortClick?: (val) => void
   onChipClick?: (index: number) => void
+  hideActions?: boolean
 }
 
 function TradeTable({
   trades,
-  onEditClick,
-  onRowClick = noop,
   showFilter,
   pageCount,
   currPage,
@@ -59,6 +64,7 @@ function TradeTable({
   sortDirection,
   onSortClick = noop,
   onChipClick = noop,
+  hideActions,
 }: TradeTableProps) {
   const classes = useStyles()
   const columns = [
@@ -182,19 +188,29 @@ function TradeTable({
     },
   ]
 
-  if (!trades) return <></>
+  const actions = [
+    {
+      icon: EditIcon,
+      onClick: (trade) => Router.push(`/trades/${trade.id}/edit`),
+    },
+    {
+      icon: DeleteIcon,
+      onClick: (trade) => console.log('deleting trade', trade),
+    },
+  ]
 
   return (
     <div className={classes.root}>
       <Table
         columns={columns}
+        actions={actions}
         items={trades}
         pageCount={pageCount || 0}
         currPage={currPage || 0}
         sortDirection={sortDirection}
         handlePageChange={handlePageChange}
         onSortClick={onSortClick}
-        onRowClick={(trade) => onRowClick(trade.id)}
+        onRowClick={(trade) => Router.push(`/trades/${trade.id}`)}
         renderToolbar={() =>
           showFilter ? (
             <TradeTableToolbar

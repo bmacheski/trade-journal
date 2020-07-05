@@ -56,7 +56,7 @@ function Dropdown({ buttonName, children }: DropdownProps) {
   return (
     <div style={{ marginRight: 5, marginLeft: 5 }}>
       <Button
-        variant="outlined"
+        variant="contained"
         color="primary"
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}

@@ -15,5 +15,6 @@ body {
 /* progress bar */
 #nprogress .bar {
   height: 4px !important;
+  background-color: #4051b5 !important;
   z-index: 1102 !important;
 }
