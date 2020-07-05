@@ -28,18 +28,20 @@ export default ({
 
 export async function getServerSideProps({ query }) {
   const { count, direction = SortDirection.Ascending, page, sort } = query
+
+  const queryFilter = query['filters[]'] || null
+  const queryFilterArr = Array.isArray(queryFilter)
+    ? [...queryFilter]
+    : [queryFilter]
+  const filters = queryFilterArr.filter((f) => f).map((f) => JSON.parse(f))
   const { data: trades = [], meta = {} } = await getTrades(
     page,
     sort,
     direction,
     count,
-    query['f[]']
+    filters
   )
-  const queryFilter = query['f[]'] || null
-  const queryFilterArr = Array.isArray(queryFilter)
-    ? [...queryFilter]
-    : [queryFilter]
-  const filters = queryFilterArr.filter((f) => f).map((f) => JSON.parse(f))
+
   return {
     props: {
       trades,

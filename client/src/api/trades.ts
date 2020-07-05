@@ -49,7 +49,7 @@ export const getTrades = (
   })
 
   let url = `${TRADES_URL}?${queryString.stringify(data)}`
-  url += buildFilterQueryString(filters)
+  url += buildFilterQueryString(filters, true)
   return fetch(url).then(extractData)
 }
 
