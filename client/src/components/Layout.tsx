@@ -15,11 +15,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   appBar: {
+    boxShadow: 'none',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    backgroundColor: 'white',
+    color: '#263238',
   },
   appBarShift: {
     marginLeft: (props: any) => props.drawerWidth,
@@ -37,10 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flexGrow: 1,
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(6),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(5),
   },
 }))
 
@@ -59,7 +62,7 @@ function LayoutWrapper({ children }: LayoutWrapperProps) {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id="root">
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {

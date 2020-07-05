@@ -1,6 +1,8 @@
 import React from 'react'
 import { Card, CardContent, Typography, makeStyles } from '@material-ui/core'
-import ReactApexChart from 'react-apexcharts'
+import dynamic from 'next/dynamic'
+
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -61,7 +63,7 @@ function WinPercentage({
           series: [
             totalCount > 0 ? ((winCount / totalCount) * 100).toFixed(2) : 0,
           ],
-        }),
+        })
       )
     }
   }, [winCount, totalCount])
@@ -80,7 +82,7 @@ function WinPercentage({
   ]
 
   return (
-    <Card>
+    <Card elevation={0}>
       <CardContent>
         <ReactApexChart
           options={config}

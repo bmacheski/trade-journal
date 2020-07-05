@@ -193,6 +193,7 @@ function TradeTable({
         currPage={currPage || 0}
         sortDirection={sortDirection}
         handlePageChange={handlePageChange}
+        onSortClick={onSortClick}
         onRowClick={(trade) => onRowClick(trade.id)}
         renderToolbar={() =>
           showFilter ? (

@@ -2,12 +2,13 @@ import { Filter } from '../types'
 
 export function buildFilterQueryString(filters: Filter[]) {
   let url = ''
-  if (filters.length) {
-    url += '&'
-    filters.forEach((e, idx) => {
-      url += `${e.name}[]=${e.value}`
-      if (idx !== filters.length - 1) url += '&'
+  if (Array.isArray(filters) && filters.length) {
+    url += `&`
+    filters.forEach((f, idx) => {
+      url += `f[]=${JSON.stringify(f)}`
+      if (idx !== filters.length - 1) url += `&`
     })
   }
+
   return url
 }

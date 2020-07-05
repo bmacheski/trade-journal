@@ -97,7 +97,7 @@ function EquityGraph() {
   }
 
   return (
-    <Card>
+    <Card elevation={0}>
       <CardContent>
         <Chart
           options={options.options}

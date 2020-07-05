@@ -10,7 +10,7 @@ import {
   Chip,
   CircularProgress,
 } from '@material-ui/core'
-import { useParams, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import * as dateFormatter from '../utils/date'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -21,6 +21,7 @@ import { getSetups, Setup } from '../api/setups'
 import { DateTimePicker } from '@material-ui/pickers'
 import { getPlatforms } from '../api/platforms'
 import { getTags } from '../api/tags'
+import { useRouter } from 'next/router'
 
 function parseDateFields(values: any) {
   const { entry_date, exit_date } = values
@@ -37,7 +38,7 @@ interface SymbolOptionType {
 }
 
 function TradeForm() {
-  const { id = 'new' }: any = useParams()
+  const { id = 'new' }: any = useRouter()
   const isNewTrade = id === 'new'
   const [loading, setLoading] = React.useState<boolean>(false)
   const [redirect, setRedirect] = React.useState<string>('')
@@ -338,7 +339,7 @@ function TradeForm() {
               </Grid>
               <Button
                 color="primary"
-                variant="contained"
+                variant="outlined"
                 type="submit"
                 style={{ marginTop: '10px' }}
               >

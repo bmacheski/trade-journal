@@ -64,7 +64,7 @@ function Table<T>({
 
   return (
     <div className={classes.root}>
-      <TableContainer component={Paper}>
+      <TableContainer>
         {renderToolbar()}
         <MaterialUITable>
           <TableHead>
@@ -75,7 +75,9 @@ function Table<T>({
                     disabled={!col.sort}
                     active={orderBy === col.field}
                     direction={sortDirection}
-                    onClick={() => onSortClick(col.field)}
+                    onClick={() => {
+                      onSortClick(col.field)
+                    }}
                   >
                     {col.title}
                   </TableSortLabel>
@@ -84,24 +86,35 @@ function Table<T>({
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((currItem) => {
-              return (
-                <TableRow
-                  className={classes.tableRow}
-                  onClick={() => onRowClick && onRowClick(currItem)}
+            {items.length ? (
+              items.map((currItem) => {
+                return (
+                  <TableRow
+                    className={classes.tableRow}
+                    onClick={() => onRowClick && onRowClick(currItem)}
+                  >
+                    {columns.map((currColumn) => {
+                      return (
+                        <TableCell>
+                          {currColumn.render
+                            ? currColumn.render(currItem)
+                            : get(currItem, currColumn.field)}
+                        </TableCell>
+                      )
+                    })}
+                  </TableRow>
+                )
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  style={{ textAlign: 'center' }}
                 >
-                  {columns.map((currColumn) => {
-                    return (
-                      <TableCell>
-                        {currColumn.render
-                          ? currColumn.render(currItem)
-                          : get(currItem, currColumn.field)}
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
+                  No records to display
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </MaterialUITable>
       </TableContainer>

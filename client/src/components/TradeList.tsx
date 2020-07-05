@@ -1,69 +1,88 @@
 import React from 'react'
-import { Redirect, Link } from 'react-router-dom'
 import { ROUTES } from '../Router'
 import { Button, CardHeader, Card } from '@material-ui/core'
-import { getTrades } from '../api/trades'
+import { buildTradesUrl } from '../api/trades'
 import TradeTable from './TradeTable'
 import { Filter, Trade, SortDirection } from '../types'
+import Link from 'next/link'
+import Router from 'next/router'
 
-function TradeList() {
-  const [redirect, setRedirect] = React.useState<string>('')
-  const [trades, setTrades] = React.useState<Trade[]>([])
-  const [pageCount, setPageCount] = React.useState<number>(0)
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>(
-    SortDirection.Ascending,
-  )
-  const [sort, setSort] = React.useState<string | null>(null)
-  const [page, setPage] = React.useState<number>(1)
-  const [selectedFilters, setSelectedFilters] = React.useState<Filter[]>([])
+interface TradeListProps {
+  trades: Trade[]
+  pageCount: number
+  page: number
+  sortDirection: SortDirection
+  sort: string
+  selectedFilters: Filter[]
+}
 
+function TradeList({
+  trades,
+  pageCount,
+  page,
+  sortDirection,
+  sort,
+  selectedFilters,
+}: TradeListProps) {
   function onToolbarItemSelect(value: Filter) {
-    setSelectedFilters((prevFilters) => {
-      return prevFilters.includes(value)
-        ? [...prevFilters.filter((f) => f !== value)]
-        : [...prevFilters, value]
+    Router.push({
+      pathname: '/trades',
+      query: buildTradesUrl(page, sort, sortDirection, 20, [
+        ...(selectedFilters.includes(value)
+          ? [...selectedFilters.filter((f) => f !== value)]
+          : [...selectedFilters, value]),
+      ]),
     })
   }
 
   function onDeleteChip(idx: number) {
-    setSelectedFilters((prevFilters) => [
-      ...prevFilters.filter((_, i) => i !== idx),
-    ])
+    Router.push({
+      pathname: '/trades',
+      query: buildTradesUrl(page, sort, sortDirection, 20, [
+        ...selectedFilters.filter((_, i) => i !== idx),
+      ]),
+    })
   }
 
   function onSortChange(incomingSort: string) {
-    const prevSort = sort
-    setSort(incomingSort)
-    setSortDirection((prevDir) =>
-      prevDir == SortDirection.Ascending || incomingSort !== prevSort
+    const newDirection =
+      sortDirection == SortDirection.Ascending || incomingSort !== sort
         ? SortDirection.Descending
-        : SortDirection.Descending,
-    )
+        : SortDirection.Ascending
+
+    Router.push({
+      pathname: '/trades',
+      query: buildTradesUrl(
+        page,
+        incomingSort,
+        newDirection,
+        20,
+        selectedFilters
+      ),
+    })
   }
 
-  React.useEffect(() => {
-    function fetchTrades() {
-      getTrades(page, sort, sortDirection, 20, selectedFilters).then(
-        ({ meta, data }) => {
-          setPageCount(meta.page_count)
-          setTrades(data)
-          setPage(meta.page)
-        },
-      )
-    }
-    fetchTrades()
-  }, [page, selectedFilters, sort, sortDirection])
-
-  if (redirect) return <Redirect to={redirect} />
+  function setPage(incomingPage: number) {
+    Router.push({
+      pathname: '/trades',
+      query: buildTradesUrl(
+        incomingPage,
+        sort,
+        sortDirection,
+        20,
+        selectedFilters
+      ),
+    })
+  }
 
   return (
     <>
-      <Link to={ROUTES.TREADE_CREATE}>
-        <Button color="primary" variant="contained">
+      <Link href={ROUTES.TREADE_CREATE}>
+        <Button color="primary" variant="outlined">
           Add Trade
         </Button>
       </Link>
-      <Card style={{ marginTop: 10 }}>
+      <Card style={{ marginTop: 10 }} elevation={0}>
         <CardHeader title="Trades" />
         <TradeTable
           showFilter={true}
@@ -72,8 +91,8 @@ function TradeList() {
           pageCount={pageCount}
           trades={trades}
           handlePageChange={(page) => setPage(page)}
-          onRowClick={(id) => setRedirect(`/trades/${id}`)}
-          onEditClick={(id) => setRedirect(`/trades/${id}/edit`)}
+          onRowClick={(id) => Router.push(`/trades/${id}`)}
+          onEditClick={(id) => Router.push(`/trades/${id}/edit`)}
           selectedFilters={selectedFilters}
           onToolbarItemSelect={onToolbarItemSelect}
           sortDirection={sortDirection}

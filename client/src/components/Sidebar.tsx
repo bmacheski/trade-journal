@@ -5,15 +5,20 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import { ShowChart, Settings } from '@material-ui/icons'
-import { Dashboard } from '@material-ui/icons'
-import { Link as RouterLink } from 'react-router-dom'
+import RouterLink from 'next/link'
 import Link from '@material-ui/core/Link'
 import { ROUTES } from '../Router'
 import { useTheme, Divider } from '@material-ui/core'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
+import dynamic from 'next/dynamic'
+
+const Dashboard = dynamic(() => import('@material-ui/icons/Dashboard'))
+const ShowChart = dynamic(() => import('@material-ui/icons/ShowChart'))
+const Settings = dynamic(() => import('@material-ui/icons/Settings'))
+const ChevronLeftIcon = dynamic(() => import('@material-ui/icons/ChevronLeft'))
+const ChevronRightIcon = dynamic(() =>
+  import('@material-ui/icons/ChevronRight'),
+)
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -98,8 +103,8 @@ function Sidebar(props: SidebarProps) {
       <List>
         {routes.map(({ icon: ListIcon, text, path }, idx) => {
           return (
-            <Link component={RouterLink} to={path} key={idx}>
-              <Tooltip title="Dashboard" placement="right">
+            <Link component={RouterLink} href={path} key={idx}>
+              <Tooltip title={text} placement="right">
                 <ListItem button>
                   <ListItemIcon>
                     <ListIcon />
