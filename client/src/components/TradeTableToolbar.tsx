@@ -16,13 +16,14 @@ import { Filter } from '../types'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import RangeSlider from './RangeSlider'
+import some from 'lodash/some'
 
 const useStyles = makeStyles(() =>
   createStyles({
     filterTitle: {
       fontSize: 12,
     },
-  }),
+  })
 )
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
@@ -58,7 +59,7 @@ function TradeTableToolbar({
                     <Checkbox
                       icon={icon}
                       checkedIcon={checkedIcon}
-                      checked={selectedFilters.includes(item)}
+                      checked={some(selectedFilters, item)}
                     />
                     {item.value}
                   </MenuItem>
@@ -159,13 +160,15 @@ function TradeTableToolbar({
   return (
     <Toolbar>
       {filterData.filter((f) => f.enabled).map((f) => f.renderSelect())}
-      {selectedFilters.map((f, idx) => (
-        <Chip
-          label={`${f.name}: ${f.value}`}
-          style={{ marginLeft: 5, marginRight: 5 }}
-          onDelete={() => onChipClick(idx)}
-        />
-      ))}
+      {selectedFilters.map((f, idx) => {
+        return (
+          <Chip
+            label={`${f.name}: ${f.value}`}
+            style={{ marginLeft: 5, marginRight: 5 }}
+            onDelete={() => onChipClick(idx)}
+          />
+        )
+      })}
     </Toolbar>
   )
 }

@@ -5,7 +5,7 @@ class TradesController < ApplicationController
     page = params[:page] || 1
     sort = params[:sort] || :created_at
     direction = params[:direction] || :asc
-    per_page = params[:count_per_page] || 20
+    per_page = params[:count] || 20
     @trades = Trade.joins(:pair)
 
     @trades = @trades.where('pairs.name in (?)', params[:pair]) unless params[:pair].nil?

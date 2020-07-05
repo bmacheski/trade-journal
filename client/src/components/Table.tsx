@@ -2,19 +2,19 @@ import {
   makeStyles,
   createStyles,
   TableContainer,
-  Paper,
   TableBody,
   TableHead,
   TableRow,
   TableCell,
   TableSortLabel,
   Table as MaterialUITable,
+  IconButton,
 } from '@material-ui/core'
 import React from 'react'
 import get from 'lodash/get'
 import Pagination from '@material-ui/lab/Pagination'
 import noop from 'lodash/noop'
-import { SortDirection, Trade } from '../types'
+import { SortDirection } from '../types'
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -46,6 +46,7 @@ interface TableProps<T> {
   onSortClick?: (c: string) => void
   sortDirection?: SortDirection
   renderToolbar?: () => JSX.Element | void
+  actions?: any[]
 }
 
 function Table<T>({
@@ -59,12 +60,13 @@ function Table<T>({
   sortDirection,
   orderBy,
   renderToolbar = noop,
+  actions,
 }: TableProps<T>) {
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
-      <TableContainer component={Paper}>
+      <TableContainer>
         {renderToolbar()}
         <MaterialUITable>
           <TableHead>
@@ -75,33 +77,65 @@ function Table<T>({
                     disabled={!col.sort}
                     active={orderBy === col.field}
                     direction={sortDirection}
-                    onClick={() => onSortClick(col.field)}
+                    onClick={() => {
+                      onSortClick(col.field)
+                    }}
                   >
                     {col.title}
                   </TableSortLabel>
                 </TableCell>
               ))}
+              {actions && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((currItem) => {
-              return (
-                <TableRow
-                  className={classes.tableRow}
-                  onClick={() => onRowClick && onRowClick(currItem)}
-                >
-                  {columns.map((currColumn) => {
-                    return (
+            {items.length ? (
+              items.map((currItem) => {
+                return (
+                  <TableRow
+                    className={classes.tableRow}
+                    onClick={() => onRowClick && onRowClick(currItem)}
+                  >
+                    {columns.map((currColumn) => {
+                      return (
+                        <TableCell>
+                          {currColumn.render
+                            ? currColumn.render(currItem)
+                            : get(currItem, currColumn.field)}
+                        </TableCell>
+                      )
+                    })}
+                    {actions && (
                       <TableCell>
-                        {currColumn.render
-                          ? currColumn.render(currItem)
-                          : get(currItem, currColumn.field)}
+                        <div style={{ display: 'flex' }}>
+                          {actions.map(({ icon: Icon, onClick }) => {
+                            return (
+                              <IconButton
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  onClick(currItem)
+                                }}
+                              >
+                                <Icon />
+                              </IconButton>
+                            )
+                          })}
+                        </div>
                       </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
+                    )}
+                  </TableRow>
+                )
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  style={{ textAlign: 'center' }}
+                >
+                  No records to display
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </MaterialUITable>
       </TableContainer>

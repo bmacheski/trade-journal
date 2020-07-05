@@ -50,12 +50,12 @@ function Dashboard() {
     return (
       <>
         <Grid item lg={3} sm={6} md={3} xl={3} xs={12}>
-          <Card className={classes.card}>
+          <Card className={classes.card} elevation={0}>
             <CardContent>Total Trade Count: {metrics.total_count}</CardContent>
           </Card>
         </Grid>
         <Grid item lg={3} sm={6} md={3} xl={3} xs={12}>
-          <Card className={classes.card}>
+          <Card className={classes.card} elevation={0}>
             <CardContent>
               <div className={classes.long}> Longs: {metrics.long_count}</div>
               <div>Win Count: {metrics.long_win_count}</div>
@@ -63,7 +63,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item lg={3} sm={6} md={3} xl={3} xs={12}>
-          <Card className={classes.card}>
+          <Card className={classes.card} elevation={0}>
             <CardContent>
               <div className={classes.short}>
                 {' '}
@@ -74,7 +74,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item lg={3} sm={6} md={3} xl={3} xs={12}>
-          <Card className={classes.card}>
+          <Card className={classes.card} elevation={0}>
             <CardContent>
               <div>
                 Average RRR: {Number(metrics.risk_reward_ratio_avg).toFixed(2)}
@@ -86,7 +86,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xl={4} xs={12}>
-          <Card>
+          <Card elevation={0}>
             <CardHeader title="Wins / Losses" />
             <CardContent>
               <WinPercentage
@@ -99,7 +99,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xl={4} xs={12}>
-          <Card>
+          <Card elevation={0} style={{ height: '100%' }}>
             <CardHeader title="Setups" />
             <CardContent>
               <Table
@@ -128,7 +128,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xl={4} xs={12}>
-          <Card>
+          <Card elevation={0} style={{ height: '100%' }}>
             <CardHeader title="Tags" />
             <CardContent>
               <Table
