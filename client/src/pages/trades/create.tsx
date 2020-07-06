@@ -4,7 +4,7 @@ import { getTrade } from '../../api/trades'
 import TradeForm from '../../components/TradeForm'
 
 // trade create
-export default ({ trade, id }) => {
+export default () => {
   return (
     <LayoutWrapper>
       <div style={{ margin: '0px 40px 0 40px' }}>
