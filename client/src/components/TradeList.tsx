@@ -6,6 +6,7 @@ import { Filter, Trade, SortDirection } from '../types'
 import Link from 'next/link'
 import Router from 'next/router'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import some from 'lodash/some'
 
 interface TradeListProps {
   trades: Trade[]
@@ -24,24 +25,34 @@ function TradeList({
   sort,
   selectedFilters,
 }: TradeListProps) {
-  function onToolbarItemSelect(value: Filter) {
-    Router.push({
-      pathname: '/trades',
-      query: buildTradesUrl(page, sort, sortDirection, 20, [
-        ...(selectedFilters.includes(value)
-          ? [...selectedFilters.filter((f) => f !== value)]
-          : [...selectedFilters, value]),
-      ]),
-    })
+  const [url, setUrl] = React.useState<string | null>(null)
+
+  function onToolbarItemSelect(incomingFilter: Filter) {
+    setUrl(
+      buildTradesUrl(
+        page,
+        sort,
+        sortDirection,
+        20,
+        some(selectedFilters, incomingFilter)
+          ? [
+              ...selectedFilters.filter(
+                (f) =>
+                  f.name !== incomingFilter.name ||
+                  f.value !== incomingFilter.value
+              ),
+            ]
+          : [...selectedFilters, incomingFilter]
+      )
+    )
   }
 
   function onDeleteChip(idx: number) {
-    Router.push({
-      pathname: '/trades',
-      query: buildTradesUrl(page, sort, sortDirection, 20, [
+    setUrl(
+      buildTradesUrl(page, sort, sortDirection, 20, [
         ...selectedFilters.filter((_, i) => i !== idx),
-      ]),
-    })
+      ])
+    )
   }
 
   function onSortChange(incomingSort: string) {
@@ -50,30 +61,25 @@ function TradeList({
         ? SortDirection.Descending
         : SortDirection.Ascending
 
-    Router.push({
-      pathname: '/trades',
-      query: buildTradesUrl(
-        page,
-        incomingSort,
-        newDirection,
-        20,
-        selectedFilters
-      ),
-    })
+    setUrl(
+      buildTradesUrl(page, incomingSort, newDirection, 20, selectedFilters)
+    )
   }
 
   function setPage(incomingPage: number) {
-    Router.push({
-      pathname: '/trades',
-      query: buildTradesUrl(
-        incomingPage,
-        sort,
-        sortDirection,
-        20,
-        selectedFilters
-      ),
-    })
+    setUrl(
+      buildTradesUrl(incomingPage, sort, sortDirection, 20, selectedFilters)
+    )
   }
+
+  React.useEffect(() => {
+    if (url) {
+      Router.push({
+        pathname: '/trades',
+        query: url,
+      })
+    }
+  }, [url])
 
   return (
     <>
