@@ -1,10 +1,4 @@
-import {
-  Chip,
-  makeStyles,
-  Theme,
-  createStyles,
-  IconButton,
-} from '@material-ui/core'
+import { Chip, makeStyles, Theme, createStyles } from '@material-ui/core'
 import React from 'react'
 import * as dateFormatter from '../utils/date'
 import * as dollarFormatter from '../utils/dollar'
@@ -17,6 +11,7 @@ import { SortDirection, Trade } from '../types'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Router from 'next/router'
+import { deleteTrade } from '../api/trades'
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -45,7 +40,6 @@ interface TradeTableProps {
   handlePageChange?: (page: number) => void
   selectedFilters?: any[]
   onToolbarItemSelect?: (a, b) => void
-  orderBy?: string | null
   sortDirection?: SortDirection
   onSortClick?: (val) => void
   onChipClick?: (index: number) => void
@@ -57,14 +51,12 @@ function TradeTable({
   showFilter,
   pageCount,
   currPage,
-  handlePageChange = noop,
   selectedFilters = [],
-  onToolbarItemSelect = noop,
-  orderBy,
   sortDirection,
+  handlePageChange = noop,
+  onToolbarItemSelect = noop,
   onSortClick = noop,
   onChipClick = noop,
-  hideActions,
 }: TradeTableProps) {
   const classes = useStyles()
   const columns = [
@@ -195,9 +187,15 @@ function TradeTable({
     },
     {
       icon: DeleteIcon,
-      onClick: (trade) => console.log('deleting trade', trade),
+      onClick: (trade) => handleDeleteTrade(trade.id),
     },
   ]
+
+  function handleDeleteTrade(tradeId: string) {
+    deleteTrade(tradeId)
+      .then(() => console.log('trade deleted successfully'))
+      .catch((err) => console.error('error deleting trade :', err))
+  }
 
   return (
     <div className={classes.root}>

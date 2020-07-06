@@ -1,29 +1,22 @@
 import React from 'react'
-import { useParams, Redirect } from 'react-router-dom'
-import TradeTable from './TradeTable'
 import {
   Card,
   CardContent,
   CardHeader,
   Chip,
   Typography,
-  CircularProgress,
   makeStyles,
   Theme,
   createStyles,
   Button,
-  IconButton,
   Table,
   TableBody,
   TableRow,
   TableCell,
-  TableHead,
   Grid,
 } from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
-import { getTrade } from '../api/trades'
 import { Trade } from '../types'
-import Router from 'next/router'
 import Link from 'next/link'
 import EditIcon from '@material-ui/icons/Edit'
 

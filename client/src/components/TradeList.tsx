@@ -100,7 +100,6 @@ function TradeList({
           selectedFilters={selectedFilters}
           onToolbarItemSelect={onToolbarItemSelect}
           sortDirection={sortDirection}
-          orderBy={sort}
           onSortClick={onSortChange}
           onChipClick={onDeleteChip}
         />
