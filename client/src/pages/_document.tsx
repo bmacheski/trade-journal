@@ -23,6 +23,10 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Nunito&display=swap"
+            rel="stylesheet"
+          ></link>
           <meta name="theme-color" content={theme.palette.primary.main} />
         </Head>
         <body>
